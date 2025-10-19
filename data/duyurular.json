@@ -1,0 +1,43 @@
+[
+  {
+    "id": "mgs0qu260qfz9j",
+    "title": "32131",
+    "type": "Bilgi",
+    "icon": "ti ti-info-circle",
+    "text": "32131",
+    "active": true,
+    "admin": "atina",
+    "date": "2025-10-15T13:20:32.430Z",
+    "createdAt": "2025-10-15T13:20:32.430Z"
+  },
+  {
+    "id": "mgnxtzxh461cpj",
+    "title": "Hoş Geldiniz!",
+    "type": "Bilgi",
+    "icon": "ti ti-info-circle",
+    "text": "discord.gg/atina",
+    "active": true,
+    "admin": "atina",
+    "date": "2025-10-12T16:48:01.061Z"
+  },
+  {
+    "id": "mgnxtins8wyiuu",
+    "title": "Sitemiz 7/24 aktiftir.",
+    "type": "Bilgi",
+    "icon": "ti ti-info-circle",
+    "text": "discord.gg/atina",
+    "active": true,
+    "admin": "atina",
+    "date": "2025-10-12T16:47:34.072Z"
+  },
+  {
+    "id": "mgnxsvhsuid1xl",
+    "title": "Şifrenizi lütfen kimse ile paylaşmayınız.",
+    "type": "Uyarı",
+    "icon": "ti ti-alert-triangle",
+    "text": "discord.gg/atina",
+    "active": true,
+    "admin": "atina",
+    "date": "2025-10-12T16:47:04.048Z"
+  }
+]

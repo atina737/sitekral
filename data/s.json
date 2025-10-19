@@ -1,0 +1,7 @@
+{
+  "siteName": "Atina",
+  "registerAutoApprove": true,
+  "defaultMembershipDays": 30,
+  "defaultQueryCredits": 30,
+  "dailyQueryCredits": 10
+}
