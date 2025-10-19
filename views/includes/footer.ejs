@@ -1,0 +1,27 @@
+<!-- Footer Start -->
+<footer class="footer d-flex justify-content-center align-items-center" style="height: 60px; min-height: 60px;">
+  <small class="text-muted m-0">
+    Telif Hakkı © Geliştirici 
+    <a href="#" class="fw-bold text-decoration-underline text-reset text-primary">Atina</a>
+
+    <script>document.write(new Date().getFullYear())</script>
+  </small>
+</footer>
+
+<!-- Güvenlik Koruması -->
+<script>
+(function() {
+    // Sadece geliştirici araçları açıldığında çalışır
+    let devtools = false;
+    setInterval(() => {
+        if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
+            if (!devtools) {
+                devtools = true;
+                console.clear();
+                console.log('%c🚨 GÜVENLİK UYARISI 🚨', 'color: #ff0000; font-size: 16px; font-weight: bold;');
+                console.log('%cBu alan geliştiriciler için ayrılmıştır. Tüm aktiviteler izlenmektedir.', 'color: #ff6600; font-size: 12px;');
+            }
+        }
+    }, 1000);
+})();
+</script>

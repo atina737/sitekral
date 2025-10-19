@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+ <%- include('includes/head') %>
+ 
+</head>
+
+<!-- Toastr CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+<!-- Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
+<body>
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        
+        <%- include('includes/sidebar') %>
+        
+
+                <%- include('includes/topbar') %>
+
+                
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+        <div class="page-content">
+
+            <div class="page-container">
+
+                
+                <div class="page-title-head d-flex align-items-center gap-2">
+                    <div class="flex-grow-1">
+                        <h4 class="fs-17 mb-0">Market</h4>
+                    </div>
+                    <div class="text-end">
+                        <ol class="breadcrumb m-0 py-0 fs-13">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Admin</a></li>
+                            <li class="breadcrumb-item active">Market</li>
+                        </ol>
+                    </div>
+                </div>
+
+
+                <!-- Market Header -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header border-bottom">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <h4 class="card-title mb-1">Market</h4>
+                                        <small class="text-muted">Hesabınızı yükseltin ve premium özelliklerin keyfini çıkarın!</small>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="badge bg-primary" id="userBalance">Bakiye: Yükleniyor...</span>
+                                        <span class="badge bg-success" id="userQueryCredits">Sorgu Hakkı: Yükleniyor...</span>
+                                   
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sorgu Paketleri -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header border-bottom">
+                                <h5 class="card-title mb-0">Sorgu Paketleri</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <!-- Ücretsiz Paket -->
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="card border h-100">
+                                            <div class="card-body text-center">
+                                                <div class="mb-3">
+                                                    <i class="ti ti-user text-muted" style="font-size: 2.5rem;"></i>
+                                                </div>
+                                                <h5 class="card-title">Ücretsiz</h5>
+                                                <p class="text-muted">Temel özellikler</p>
+                                                <div class="mb-3">
+                                                    <span class="fs-1 fw-bold">₺0</span>
+                                                    <span class="text-muted">/ay</span>
+                                                </div>
+                                                <ul class="list-unstyled mb-4">
+                                                    <li class="mb-2 d-flex align-items-center gap-2">
+                                                        <i class="ti ti-check text-success"></i>
+                                                        <span>10 Sorgu/Gün</span>
+                                                    </li>
+                                                    <li class="mb-2 d-flex align-items-center gap-2">
+                                                        <i class="ti ti-check text-success"></i>
+                                                        <span>Temel Destek</span>
+                                                    </li>
+                                                    <li class="mb-2 d-flex align-items-center gap-2">
+                                                        <i class="ti ti-x text-muted"></i>
+                                                        <span class="text-muted">Öncelikli İşlem</span>
+                                                    </li>
+                                                    <li class="mb-2 d-flex align-items-center gap-2">
+                                                        <i class="ti ti-x text-muted"></i>
+                                                        <span class="text-muted">API Erişimi</span>
+                                                    </li>
+                                                </ul>
+                                                <button class="btn btn-secondary w-100" disabled>
+                                                    <i class="ti ti-check me-2"></i>Mevcut Paket
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- VIP Paket -->
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="card border h-100 position-relative">
+                                            <div class="position-absolute top-0 end-0 m-3">
+                                                <span class="badge bg-primary">POPÜLER</span>
+                                            </div>
+                                            <div class="card-body text-center">
+                                                <div class="mb-3">
+                                                    <i class="ti ti-crown text-primary" style="font-size: 2.5rem;"></i>
+                                                </div>
+                                                <h5 class="card-title">VIP</h5>
+                                                <p class="text-muted">Gelişmiş özellikler</p>
+                                                <div class="mb-3">
+                                                    <span class="fs-1 fw-bold">₺99</span>
+                                                    <span class="text-muted">/ay</span>
+                                                </div>
+                                                <ul class="list-unstyled mb-4">
+                                                    <li class="mb-2 d-flex align-items-center gap-2">
+                                                        <i class="ti ti-check text-success"></i>
+                                                        <span>100 Sorgu/Gün</span>
+                                                    </li>
+                                                    <li class="mb-2 d-flex align-items-center gap-2">
+                                                        <i class="ti ti-check text-success"></i>
+                                                        <span>Öncelikli Destek</span>
+                                                    </li>
+                                                    <li class="mb-2 d-flex align-items-center gap-2">
+                                                        <i class="ti ti-check text-success"></i>
+                                                        <span>Öncelikli İşlem</span>
+                                                    </li>
+                                                    <li class="mb-2 d-flex align-items-center gap-2">
+                                                        <i class="ti ti-check text-success"></i>
+                                                        <span>Temel API Erişimi</span>
+                                                    </li>
+                                                </ul>
+                                                <button class="btn btn-primary w-100" onclick="purchasePackage('vip')">
+                                                    <i class="ti ti-shopping-cart me-2"></i>Satın Al
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Premium Paket -->
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="card border h-100">
+                                            <div class="card-body text-center">
+                                                <div class="mb-3">
+                                                    <i class="ti ti-diamond text-warning" style="font-size: 2.5rem;"></i>
+                                                </div>
+                                                <h5 class="card-title">Premium</h5>
+                                                <p class="text-muted">Tüm özellikler</p>
+                                                <div class="mb-3">
+                                                    <span class="fs-1 fw-bold">₺199</span>
+                                                    <span class="text-muted">/ay</span>
+                                                </div>
+                                                <ul class="list-unstyled mb-4">
+                                                    <li class="mb-2 d-flex align-items-center gap-2">
+                                                        <i class="ti ti-check text-success"></i>
+                                                        <span>Sınırsız Sorgu</span>
+                                                    </li>
+                                                    <li class="mb-2 d-flex align-items-center gap-2">
+                                                        <i class="ti ti-check text-success"></i>
+                                                        <span>7/24 Premium Destek</span>
+                                                    </li>
+                                                    <li class="mb-2 d-flex align-items-center gap-2">
+                                                        <i class="ti ti-check text-success"></i>
+                                                        <span>En Hızlı İşlem</span>
+                                                    </li>
+                                                    <li class="mb-2 d-flex align-items-center gap-2">
+                                                        <i class="ti ti-check text-success"></i>
+                                                        <span>Tam API Erişimi</span>
+                                                    </li>
+                                                </ul>
+                                                <button class="btn btn-warning w-100" onclick="purchasePackage('premium')">
+                                                    <i class="ti ti-shopping-cart me-2"></i>Satın Al
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Premium Özellikler -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header border-bottom">
+                                <h5 class="card-title mb-0 d-flex align-items-center gap-2">
+                                    <i class="ti ti-star text-warning"></i>
+                                    Premium Özellikler
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-lg-3 col-md-6">
+                                        <div class="card border text-center">
+                                            <div class="card-body">
+                                                <div class="bg-primary bg-opacity-20 rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                                    <i class="ti ti-bolt text-primary fs-3"></i>
+                                                </div>
+                                                <h6 class="card-title">Hızlı İşlem</h6>
+                                                <p class="text-muted small">Öncelikli sunucu erişimi</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-3 col-md-6">
+                                        <div class="card border text-center">
+                                            <div class="card-body">
+                                                <div class="bg-warning bg-opacity-20 rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                                    <i class="ti ti-shield-check text-warning fs-3"></i>
+                                                </div>
+                                                <h6 class="card-title">Güvenlik</h6>
+                                                <p class="text-muted small">Gelişmiş güvenlik özellikleri</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-3 col-md-6">
+                                        <div class="card border text-center">
+                                            <div class="card-body">
+                                                <div class="bg-success bg-opacity-20 rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                                    <i class="ti ti-headset text-success fs-3"></i>
+                                                </div>
+                                                <h6 class="card-title">Destek</h6>
+                                                <p class="text-muted small">7/24 öncelikli destek</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-3 col-md-6">
+                                        <div class="card border text-center">
+                                            <div class="card-body">
+                                                <div class="bg-info bg-opacity-20 rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                                    <i class="ti ti-rocket text-info fs-3"></i>
+                                                </div>
+                                                <h6 class="card-title">API</h6>
+                                                <p class="text-muted small">Tam API entegrasyonu</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+              
+            
+                <!-- Sık Sorulan Sorular -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header border-bottom">
+                                <h5 class="card-title mb-0 d-flex align-items-center gap-2">
+                                    <i class="ti ti-help-circle text-info"></i>
+                                    Sık Sorulan Sorular
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="accordion" id="faqAccordion">
+                                    <div class="accordion-item border-0 mb-3">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                                <i class="ti ti-help-circle text-info me-2"></i>
+                                                Nasıl ödeme yapabilirim?
+                                            </button>
+                                        </h2>
+                                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                            <div class="accordion-body text-muted">
+                                                Mevcut bakiyenizden otomatik olarak ödeme yapılır. Bakiye yetersizse önce bakiye yüklemelisiniz.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="accordion-item border-0 mb-3">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                                <i class="ti ti-help-circle text-info me-2"></i>
+                                                Paketimi iptal edebilir miyim?
+                                            </button>
+                                        </h2>
+                                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                            <div class="accordion-body text-muted">
+                                                Hayır, paket iptali yapılamaz. Ancak paketinizi istediğiniz zaman değiştirebilirsiniz.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="accordion-item border-0">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                                <i class="ti ti-help-circle text-info me-2"></i>
+                                                Paket değişikliği yapabilir miyim?
+                                            </button>
+                                        </h2>
+                                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                            <div class="accordion-body text-muted">
+                                                Evet, istediğiniz zaman paketinizi yükseltebilir veya düşürebilirsiniz.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- container -->
+
+        </div>
+        <!-- End Page content -->
+          <%- include('includes/footer') %>
+
+           <script src="assets/js/vendor.min.js"></script>
+
+    <!-- App js -->
+    <script src="assets/js/app.js"></script>
+
+    </div>
+    <!-- END wrapper -->
+
+    <script>
+        // Toastr Configuration
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        // Toastr System
+        function showAlert(message, type = 'success') {
+            const toastrType = type === 'danger' ? 'error' : type;
+            toastr[toastrType](message);
+        }
+
+        // Test Toastr
+        function testToastr() {
+            if (typeof toastr !== 'undefined') {
+                toastr.success('Toastr çalışıyor!');
+                toastr.info('Bu bir bilgi mesajıdır');
+                toastr.warning('Bu bir uyarı mesajıdır');
+                toastr.error('Bu bir hata mesajıdır');
+            } else {
+                alert('Toastr yüklenmemiş!');
+            }
+        }
+
+        // Load user data
+        async function loadUserData() {
+            try {
+                const response = await fetch('/api/users/info?email=<%= user?.email %>', {
+                    credentials: 'same-origin'
+                });
+                const data = await response.json();
+                if (data.ok) {
+                    const userBalanceEl = document.getElementById('userBalance');
+                    const userQueryCreditsEl = document.getElementById('userQueryCredits');
+                    
+                    if (userBalanceEl) {
+                        userBalanceEl.textContent = `Bakiye: ₺${data.balance || 0}`;
+                    }
+                    if (userQueryCreditsEl) {
+                        userQueryCreditsEl.textContent = `Sorgu Hakkı: ${data.queryCredits || 0}`;
+                    }
+                    
+                    // Session'ı da güncelle
+                    if (data.balance !== undefined) {
+                        // Session'ı güncellemek için sayfa yenileme gerekiyor
+                        // Ama önce kullanıcı bilgilerini localStorage'a kaydet
+                        localStorage.setItem('userBalance', data.balance);
+                        localStorage.setItem('userQueryCredits', data.queryCredits);
+                    }
+                }
+            } catch (error) {
+                console.error('Kullanıcı bilgileri yüklenemedi:', error);
+            }
+        }
+
+
+        // Purchase package
+        async function purchasePackage(packageType) {
+            const packages = {
+                vip: { name: 'VIP', price: 99 },
+                premium: { name: 'Premium', price: 199 }
+            };
+
+            const pkg = packages[packageType];
+            if (!pkg) return;
+
+            const btn = event.target;
+            if (!btn) return;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Satın Alınıyor...';
+
+            try {
+                const response = await fetch('/api/market/purchase-package', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-csrf-token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ packageType, price: pkg.price })
+                });
+
+                const data = await response.json();
+                
+                if (data.ok) {
+                    showAlert(`${pkg.name} paketi başarıyla satın alındı!`, 'success');
+                    loadUserData();
+                    // Session'ı güncellemek için sayfa yenile
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    showAlert(data.message || 'Paket satın alma işlemi başarısız.', 'danger');
+                }
+            } catch (error) {
+                showAlert('Paket satın alma işlemi sırasında bir hata oluştu.', 'danger');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="ti ti-shopping-cart me-2"></i>Satın Al';
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Add any additional event listeners here if needed
+        }
+
+        // Purchase query credits
+        async function purchaseCredits(amount, price) {
+            const btn = event.target;
+            if (!btn) return;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Satın Alınıyor...';
+
+            try {
+                const response = await fetch('/api/market/purchase-credits', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-csrf-token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ amount, total: price })
+                });
+
+                const data = await response.json();
+                
+                if (data.ok) {
+                    showAlert(data.message, 'success');
+                    loadUserData();
+                    // Session'ı güncellemek için sayfa yenile
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    showAlert(data.message || 'Sorgu kredisi satın alma işlemi başarısız.', 'danger');
+                }
+            } catch (error) {
+                showAlert('Sorgu kredisi satın alma işlemi sırasında bir hata oluştu.', 'danger');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="ti ti-shopping-cart me-2"></i>Satın Al';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            setupEventListeners();
+            
+            // Global bakiye güncelleme head.ejs'de çalışıyor
+            
+            // Toastr test
+            setTimeout(() => {
+                if (typeof toastr !== 'undefined') {
+                    console.log('Toastr loaded successfully');
+                } else {
+                    console.error('Toastr not loaded');
+                }
+            }, 1000);
+        });
+    </script>
+
+</body>
+
+</html>

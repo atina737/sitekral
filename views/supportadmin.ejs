@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <%- include('includes/head') %>
+</head>
+
+<body>
+  <div class="wrapper">
+
+    <%- include('includes/sidebar') %>
+    <%- include('includes/topbar') %>
+
+    <div class="page-content">
+      <div class="page-container">
+
+        <div class="page-title-head d-flex align-items-center gap-2">
+          <div class="flex-grow-1">
+            <h4 class="fs-17 mb-0">Destek Talepleri Yönetimi</h4>
+          </div>
+          <div class="text-end">
+            <ol class="breadcrumb m-0 py-0 fs-13">
+              <li class="breadcrumb-item"><a href="#">admin</a></li>
+              <li class="breadcrumb-item active">destek yönetimi</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- İstatistik Kartları -->
+        <div class="row mb-4">
+          <div class="col-lg-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm" style="border-radius: 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+              <div class="card-body p-3 text-center">
+                <div class="bg-primary bg-opacity-20 rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                  <i class="ti ti-file text-primary fs-5"></i>
+                </div>
+                <h6 class="text-white mb-1">Toplam</h6>
+                <span class="text-primary fw-bold fs-4" id="totalTickets">0</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm" style="border-radius: 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+              <div class="card-body p-3 text-center">
+                <div class="bg-warning bg-opacity-20 rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                  <i class="ti ti-hourglass text-warning fs-5"></i>
+                </div>
+                <h6 class="text-white mb-1">Açık</h6>
+                <span class="text-warning fw-bold fs-4" id="openTickets">0</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm" style="border-radius: 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+              <div class="card-body p-3 text-center">
+                <div class="bg-success bg-opacity-20 rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                  <i class="ti ti-check text-success fs-5"></i>
+                </div>
+                <h6 class="text-white mb-1">Yanıtlandı</h6>
+                <span class="text-success fw-bold fs-4" id="answeredTickets">0</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm" style="border-radius: 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+              <div class="card-body p-3 text-center">
+                <div class="bg-info bg-opacity-20 rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                  <i class="ti ti-refresh text-info fs-5"></i>
+                </div>
+                <h6 class="text-white mb-1">İşlemde</h6>
+                <span class="text-info fw-bold fs-4" id="inProgressTickets">0</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm" style="border-radius: 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+              <div class="card-body p-3 text-center">
+                <div class="bg-secondary bg-opacity-20 rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                  <i class="ti ti-check text-secondary fs-5"></i>
+                </div>
+                <h6 class="text-white mb-1">Kapalı</h6>
+                <span class="text-secondary fw-bold fs-4" id="closedTickets">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ana İçerik -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <div class="d-flex align-items-center justify-content-between">
+                  <h4 class="card-title mb-0">Destek Talepleri</h4>
+                  <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                      <i class="ti ti-filter me-2"></i>Tüm Talepler
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#" data-filter="all">Tüm Talepler</a></li>
+                      <li><a class="dropdown-item" href="#" data-filter="open">Açık</a></li>
+                      <li><a class="dropdown-item" href="#" data-filter="answered">Yanıtlandı</a></li>
+                      <li><a class="dropdown-item" href="#" data-filter="in-progress">İşlemde</a></li>
+                      <li><a class="dropdown-item" href="#" data-filter="closed">Kapalı</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Kullanıcı</th>
+                        <th>Konu</th>
+                        <th>Kategori</th>
+                        <th>Öncelik</th>
+                        <th>Durum</th>
+                        <th>Tarih</th>
+                        <th>Cevaplar</th>
+                        <th>İşlemler</th>
+                      </tr>
+                    </thead>
+                    <tbody id="ticketsTable">
+                      <tr>
+                        <td colspan="9" class="text-center py-4">
+                          <div class="text-muted">
+                            <i class="ti ti-ticket-off fs-1 mb-3 d-block"></i>
+                            <h5>Henüz talep bulunmuyor</h5>
+                            <p>Kullanıcılar destek talebi oluşturduğunda burada görünecek.</p>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Talep Detay Modal -->
+        <div class="modal fade" id="ticketDetailModal" tabindex="-1" aria-labelledby="ticketDetailModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="ticketDetailModalLabel">Talep Detayları</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+              </div>
+              <div class="modal-body">
+                <div class="row g-4">
+                  <!-- Sol Taraf - Talep Bilgileri -->
+                  <div class="col-lg-8">
+                    <div class="mb-4">
+                      <h6 class="text-muted text-uppercase mb-2">MESAJ</h6>
+                      <div class="bg-dark bg-opacity-50 rounded-3 p-3">
+                        <p class="text-white mb-0" id="ticketMessageDetail">-</p>
+                      </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                      <div class="col-md-4">
+                        <h6 class="text-muted text-uppercase mb-2">DURUM</h6>
+                        <span class="badge bg-success px-3 py-2" id="ticketStatusBadge">Açık</span>
+                      </div>
+                      <div class="col-md-4">
+                        <h6 class="text-muted text-uppercase mb-2">KATEGORİ</h6>
+                        <span class="badge bg-primary px-3 py-2" id="ticketCategoryBadge">Genel</span>
+                      </div>
+                      <div class="col-md-4">
+                        <h6 class="text-muted text-uppercase mb-2">ÖNCELİK</h6>
+                        <span class="badge bg-info px-3 py-2" id="ticketPriorityBadge">Normal</span>
+                      </div>
+                    </div>
+
+                    <div class="mb-4">
+                      <h6 class="text-muted text-uppercase mb-2">Oluşturulma</h6>
+                      <p class="text-white fw-bold mb-0" id="ticketCreatedDate">-</p>
+                    </div>
+
+                    <!-- Cevaplar Bölümü -->
+                    <div class="mb-4">
+                      <h6 class="text-white d-flex align-items-center gap-2 mb-3">
+                        <i class="ti ti-message-dots text-primary"></i> Cevaplar
+                      </h6>
+                      <div id="ticketReplies" class="space-y-3">
+                        <!-- Cevaplar buraya gelecek -->
+                      </div>
+                    </div>
+
+                    <!-- Cevap Gönder Bölümü -->
+                    <div class="mb-4">
+                      <h6 class="text-white d-flex align-items-center gap-2 mb-3">
+                        <i class="ti ti-send text-primary"></i> Cevap Gönder
+                      </h6>
+                      <div class="mb-3">
+                        <textarea class="form-control bg-dark bg-opacity-50 border-secondary border-opacity-30 text-white" 
+                                  id="replyMessage" rows="4" placeholder="Cevabınızı yazın..." style="border-radius: 10px;"></textarea>
+                      </div>
+                      <button type="button" class="btn btn-primary" id="btnSendReply" style="border-radius: 10px;">
+                        <i class="ti ti-send me-2"></i>Cevap Gönder
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Sağ Taraf - Talep Bilgileri -->
+                  <div class="col-lg-4">
+                    <div class="bg-dark bg-opacity-50 rounded-3 p-4">
+                      <h6 class="text-white mb-3">Talep Bilgileri</h6>
+                      
+                      <div class="mb-3">
+                        <h6 class="text-muted text-uppercase mb-1">TALEP ID</h6>
+                        <p class="text-white fw-bold mb-0" id="ticketIdDetail">-</p>
+                      </div>
+
+                      <div class="mb-3">
+                        <h6 class="text-muted text-uppercase mb-1">TARİH</h6>
+                        <p class="text-white fw-bold mb-0" id="ticketDateDetail">-</p>
+                      </div>
+
+                      <div class="mb-3">
+                        <h6 class="text-muted text-uppercase mb-1">KULLANICI</h6>
+                        <div class="d-flex align-items-center gap-2">
+                          <div class="bg-primary bg-opacity-20 rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                            <i class="ti ti-user text-primary"></i>
+                          </div>
+                          <div>
+                            <p class="text-white fw-bold mb-0" id="ticketUserDetail">-</p>
+                            <small class="text-muted" id="ticketUserEmailDetail">-</small>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="mb-3">
+                        <h6 class="text-muted text-uppercase mb-1">KONU</h6>
+                        <p class="text-white fw-bold mb-0" id="ticketSubjectDetail">-</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                  <i class="ti ti-x me-2"></i> Kapat
+                </button>
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-warning">
+                    <i class="ti ti-refresh me-2"></i> Durum Değiştir
+                  </button>
+                  <button type="button" class="btn btn-danger">
+                    <i class="ti ti-trash me-2"></i> Sil
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  <%- include('includes/footer') %>
+  </div>
+
+  <!-- Vendor js -->
+  <script src="/assets/js/vendor.min.js"></script>
+
+  <!-- App js -->
+  <script src="/assets/js/app.js"></script>
+
+  <style>
+    /* Support Admin Sayfası Özel Stilleri */
+    .form-control:focus, .form-select:focus {
+      border-color: rgba(102, 126, 234, 0.5) !important;
+      box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
+      background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    .input-group-text {
+      transition: all 0.3s ease;
+    }
+    
+    .form-control, .form-select {
+      transition: all 0.3s ease;
+    }
+    
+    .form-control:hover, .form-select:hover {
+      background-color: rgba(255, 255, 255, 0.08) !important;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      border: none !important;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+    }
+    
+    .btn-outline-secondary {
+      border-color: rgba(255, 255, 255, 0.3) !important;
+      color: rgba(255, 255, 255, 0.8) !important;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-outline-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.5) !important;
+      color: white !important;
+      transform: translateY(-1px);
+    }
+    
+    .card {
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    .bg-primary.bg-opacity-20, .bg-success.bg-opacity-20, .bg-warning.bg-opacity-20, .bg-info.bg-opacity-20 {
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover .bg-primary.bg-opacity-20 {
+      background-color: rgba(13, 110, 253, 0.3) !important;
+    }
+    
+    .card:hover .bg-success.bg-opacity-20 {
+      background-color: rgba(25, 135, 84, 0.3) !important;
+    }
+    
+    .card:hover .bg-warning.bg-opacity-20 {
+      background-color: rgba(255, 193, 7, 0.3) !important;
+    }
+    
+    .card:hover .bg-info.bg-opacity-20 {
+      background-color: rgba(13, 202, 240, 0.3) !important;
+    }
+    
+    /* Animasyonlar */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .card {
+      animation: fadeInUp 0.6s ease-out;
+    }
+    
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.2s; }
+    .card:nth-child(3) { animation-delay: 0.3s; }
+    
+    /* Responsive düzenlemeler */
+    @media (max-width: 768px) {
+      .card-body {
+        padding: 1.5rem !important;
+      }
+      
+      .d-flex.justify-content-between {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .d-flex.gap-2 {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    }
+    
+    /* Badge hover effects */
+    .badge {
+      transition: all 0.3s ease;
+    }
+    
+    .badge:hover {
+      transform: scale(1.05);
+    }
+
+    /* Ticket card styles */
+    .ticket-card {
+      border-left: 4px solid;
+      transition: all 0.3s ease;
+    }
+    
+    .ticket-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    .ticket-card.open {
+      border-left-color: #28a745;
+    }
+    
+    .ticket-card.answered {
+      border-left-color: #6f42c1;
+    }
+    
+    .ticket-card.in-progress {
+      border-left-color: #fd7e14;
+    }
+    
+    .ticket-card.closed {
+      border-left-color: #6c757d;
+    }
+  </style>
+
+  <script>
+    (function() {
+      const CSRF = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '<%= csrf %>';
+      const q = s => document.querySelector(s);
+      let tickets = [];
+      let currentFilter = 'all';
+
+      // Örnek veri
+      const sampleTickets = [
+        {
+          id: 'TKT-1760526139566-749719',
+          subject: 'selam',
+          message: 'yardım',
+          category: 'Genel',
+          priority: 'Normal',
+          status: 'open',
+          user: 'atina',
+          userEmail: 'atina@gmail.com',
+          createdAt: new Date().toISOString(),
+          replies: []
+        },
+        {
+          id: 'TKT-1760468426180-d0ff12',
+          subject: 'assasagasg',
+          message: 'sagasgas',
+          category: 'Teknik',
+          priority: 'Yüksek',
+          status: 'answered',
+          user: 'admin',
+          userEmail: 'admin@laren.icu',
+          createdAt: new Date(Date.now() - 16 * 60 * 60 * 1000).toISOString(),
+          replies: [
+            {
+              id: 1,
+              message: 'buyrun',
+              user: 'atina',
+              userRole: 'Admin',
+              createdAt: new Date().toISOString()
+            }
+          ]
+        }
+      ];
+
+      function toast(msg, type) {
+        let box = document.getElementById('toastContainer');
+        if (!box) {
+          box = document.createElement('div');
+          box.id = 'toastContainer';
+          box.className = 'toast-container position-fixed top-0 end-0 p-3';
+          box.style.zIndex = '1080';
+          document.body.appendChild(box);
+        }
+        const id = 't' + Math.random().toString(36).slice(2);
+        let cls = 'bg-danger text-white';
+        if (type === 'success') cls = 'bg-success text-white';
+        else if (type === 'info') cls = 'bg-info text-dark';
+        else if (type === 'warning') cls = 'bg-warning text-dark';
+        box.insertAdjacentHTML('beforeend',
+          `<div id="${id}" class="toast align-items-center ${cls} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="d-flex">
+            <div class="toast-body">${msg || ''}</div>
+            <button type="button" class="btn-close${cls.includes('text-white') ? ' btn-close-white' : ''} me-2 m-auto" data-bs-dismiss="toast" aria-label="Kapat"></button>
+          </div>
+        </div>`
+        );
+        const el = document.getElementById(id);
+        const t = new bootstrap.Toast(el, { delay: 2200 });
+        el.addEventListener('hidden.bs.toast', function() { el.remove(); });
+        t.show();
+      }
+
+      function getStatusInfo(status) {
+        const statusMap = {
+          'open': { text: 'Açık', class: 'bg-success', icon: 'ti-hourglass' },
+          'answered': { text: 'Yanıtlandı', class: 'bg-primary', icon: 'ti-check' },
+          'in-progress': { text: 'İşlemde', class: 'bg-warning', icon: 'ti-refresh' },
+          'closed': { text: 'Kapalı', class: 'bg-secondary', icon: 'ti-check' }
+        };
+        return statusMap[status] || statusMap['open'];
+      }
+
+      function getPriorityInfo(priority) {
+        const priorityMap = {
+          'Düşük': { class: 'bg-secondary' },
+          'Normal': { class: 'bg-info' },
+          'Yüksek': { class: 'bg-warning' },
+          'Acil': { class: 'bg-danger' }
+        };
+        return priorityMap[priority] || priorityMap['Normal'];
+      }
+
+      function formatDate(dateStr) {
+        const date = new Date(dateStr);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+
+        if (diffMins < 1) return '0 dakika önce';
+        if (diffMins < 60) return `${diffMins} dakika önce`;
+        if (diffHours < 24) return `${diffHours} saat önce`;
+        return `${diffDays} gün önce`;
+      }
+
+      function updateStats() {
+        const total = tickets.length;
+        const open = tickets.filter(t => t.status === 'open').length;
+        const answered = tickets.filter(t => t.status === 'answered').length;
+        const inProgress = tickets.filter(t => t.status === 'in-progress').length;
+        const closed = tickets.filter(t => t.status === 'closed').length;
+
+        q('#totalTickets').textContent = total;
+        q('#openTickets').textContent = open;
+        q('#answeredTickets').textContent = answered;
+        q('#inProgressTickets').textContent = inProgress;
+        q('#closedTickets').textContent = closed;
+      }
+
+      function renderTickets() {
+        const el = q('#ticketsTable');
+        if (!el) return;
+
+        let filteredTickets = tickets;
+        if (currentFilter !== 'all') {
+          filteredTickets = tickets.filter(t => t.status === currentFilter);
+        }
+
+        if (!filteredTickets.length) {
+          el.innerHTML = `
+            <tr>
+              <td colspan="9" class="text-center py-4">
+                <div class="text-muted">
+                  <i class="ti ti-ticket-off fs-1 mb-3 d-block"></i>
+                  <h5>Henüz talep bulunmuyor</h5>
+                  <p>Kullanıcılar destek talebi oluşturduğunda burada görünecek.</p>
+                </div>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        el.innerHTML = filteredTickets.map(ticket => {
+          const statusInfo = getStatusInfo(ticket.status);
+          const priorityInfo = getPriorityInfo(ticket.priority);
+          const timeAgo = formatDate(ticket.createdAt);
+          const replyCount = ticket.replies ? ticket.replies.length : 0;
+
+          return `
+            <tr>
+              <td><code>${ticket.id}</code></td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="bg-primary bg-opacity-20 rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                    <i class="ti ti-user text-primary fs-6"></i>
+                  </div>
+                  <div>
+                    <div class="text-white fw-semibold">${ticket.user}</div>
+                    <small class="text-muted">${ticket.userEmail}</small>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="text-white fw-semibold">${ticket.subject}</div>
+                <small class="text-muted">${ticket.message.substring(0, 50)}...</small>
+              </td>
+              <td><span class="badge bg-info-subtle text-info">${ticket.category}</span></td>
+              <td><span class="badge ${priorityInfo.class}">${ticket.priority}</span></td>
+              <td><span class="badge ${statusInfo.class}">${statusInfo.text}</span></td>
+              <td><small class="text-muted">${timeAgo}</small></td>
+              <td><span class="badge bg-secondary">${replyCount} cevap</span></td>
+              <td>
+                <div class="d-flex gap-1">
+                  <button class="btn btn-sm btn-outline-primary" onclick="viewTicket('${ticket.id}')" title="Görüntüle">
+                    <i class="ti ti-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-warning" onclick="changeStatus('${ticket.id}')" title="Durum">
+                    <i class="ti ti-refresh"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" onclick="deleteTicket('${ticket.id}')" title="Sil">
+                    <i class="ti ti-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      function loadTickets() {
+        // API'den tüm talepleri yükle
+        fetch('/api/admin/support/tickets')
+          .then(response => response.json())
+          .then(data => {
+            if (data.ok) {
+              tickets = data.tickets || [];
+              updateStats();
+              renderTickets();
+            } else {
+              toast('Talepler yüklenemedi: ' + data.message, 'danger');
+            }
+          })
+          .catch(error => {
+            console.error('Talepler yüklenemedi:', error);
+            toast('Talepler yüklenirken bir hata oluştu', 'danger');
+            tickets = [];
+            updateStats();
+            renderTickets();
+          });
+      }
+
+      // Global functions
+      window.viewTicket = function(ticketId) {
+        const ticket = tickets.find(t => t.id === ticketId);
+        if (!ticket) return;
+
+        const statusInfo = getStatusInfo(ticket.status);
+        const priorityInfo = getPriorityInfo(ticket.priority);
+
+        q('#ticketIdDetail').textContent = `#${ticket.id}`;
+        q('#ticketDateDetail').textContent = new Date(ticket.createdAt).toLocaleString('tr-TR');
+        q('#ticketUserDetail').textContent = ticket.user;
+        q('#ticketUserEmailDetail').textContent = ticket.userEmail;
+        q('#ticketSubjectDetail').textContent = ticket.subject;
+        q('#ticketMessageDetail').textContent = ticket.message;
+        q('#ticketCreatedDate').textContent = new Date(ticket.createdAt).toLocaleString('tr-TR');
+        
+        q('#ticketStatusBadge').textContent = statusInfo.text;
+        q('#ticketStatusBadge').className = `badge ${statusInfo.class} px-3 py-2`;
+        
+        q('#ticketCategoryBadge').textContent = ticket.category;
+        q('#ticketPriorityBadge').textContent = ticket.priority;
+        q('#ticketPriorityBadge').className = `badge ${priorityInfo.class} px-3 py-2`;
+
+        // Cevapları yükle
+        const repliesEl = q('#ticketReplies');
+        if (ticket.replies && ticket.replies.length > 0) {
+          repliesEl.innerHTML = ticket.replies.map(reply => `
+            <div class="bg-primary bg-opacity-20 rounded-3 p-3">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="text-white fw-bold">${reply.user}</span>
+                <span class="badge bg-primary bg-opacity-20 text-primary px-2 py-1" style="font-size: 0.7rem;">${reply.userRole}</span>
+              </div>
+              <p class="text-white mb-2">${reply.message}</p>
+              <small class="text-muted">${new Date(reply.createdAt).toLocaleString('tr-TR')}</small>
+            </div>
+          `).join('');
+        } else {
+          repliesEl.innerHTML = `
+            <div class="text-center py-3">
+              <p class="text-muted mb-0">Henüz cevap alınmadı. Destek ekibimiz en kısa sürede size dönüş yapacaktır.</p>
+            </div>
+          `;
+        }
+
+        const modal = new bootstrap.Modal(q('#ticketDetailModal'));
+        modal.show();
+      };
+
+      window.changeStatus = function(ticketId) {
+        const ticket = tickets.find(t => t.id === ticketId);
+        if (!ticket) return;
+
+        const statuses = ['open', 'answered', 'in-progress', 'closed'];
+        const currentIndex = statuses.indexOf(ticket.status);
+        const nextIndex = (currentIndex + 1) % statuses.length;
+        const newStatus = statuses[nextIndex];
+
+        // API'ye durum güncelleme isteği gönder
+        fetch(`/api/admin/support/ticket/${ticketId}/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: newStatus })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.ok) {
+            ticket.status = newStatus;
+            updateStats();
+            renderTickets();
+            toast('Talep durumu güncellendi', 'success');
+          } else {
+            toast('Durum güncellenemedi: ' + data.message, 'danger');
+          }
+        })
+        .catch(error => {
+          console.error('Durum güncelleme hatası:', error);
+          toast('Durum güncellenirken bir hata oluştu', 'danger');
+        });
+      };
+
+      window.deleteTicket = function(ticketId) {
+        if (!window.Swal) {
+          return toast('SweetAlert2 yüklü değil!', 'danger');
+        }
+        Swal.fire({
+          title: 'Emin misiniz?',
+          text: 'Bu talebi silmek istediğinize emin misiniz?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Evet, sil!',
+          cancelButtonText: 'Vazgeç'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // API'ye silme isteği gönder
+            fetch(`/api/admin/support/ticket/${ticketId}`, {
+              method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.ok) {
+                tickets = tickets.filter(t => t.id !== ticketId);
+                updateStats();
+                renderTickets();
+                Swal.fire('Silindi!', 'Talep başarıyla silindi.', 'success');
+              } else {
+                Swal.fire('Hata!', 'Talep silinemedi: ' + data.message, 'error');
+              }
+            })
+            .catch(error => {
+              console.error('Silme hatası:', error);
+              Swal.fire('Hata!', 'Talep silinirken bir hata oluştu', 'error');
+            });
+          }
+        });
+      };
+
+      // Event listeners
+      q('#btnSendReply')?.addEventListener('click', function() {
+        const message = q('#replyMessage').value.trim();
+        if (!message) {
+          toast('Cevap mesajı boş olamaz', 'warning');
+          return;
+        }
+
+        // Modal'dan ticket ID'sini al
+        const ticketId = q('#ticketIdDetail')?.textContent?.replace('#', '');
+        if (!ticketId) {
+          toast('Talep ID bulunamadı', 'danger');
+          return;
+        }
+
+        // API'ye cevap gönderme isteği
+        fetch(`/api/admin/support/ticket/${ticketId}/reply`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ message })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.ok) {
+            toast('Cevap gönderildi', 'success');
+            q('#replyMessage').value = '';
+            // Modal'ı kapat ve listeyi yenile
+            const modal = bootstrap.Modal.getInstance(q('#ticketDetailModal'));
+            modal.hide();
+            loadTickets();
+          } else {
+            toast('Cevap gönderilemedi: ' + data.message, 'danger');
+          }
+        })
+        .catch(error => {
+          console.error('Cevap gönderme hatası:', error);
+          toast('Cevap gönderilirken bir hata oluştu', 'danger');
+        });
+      });
+
+      // Filter dropdown
+      document.querySelectorAll('[data-filter]').forEach(item => {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          currentFilter = this.getAttribute('data-filter');
+          renderTickets();
+        });
+      });
+
+      // Initialize
+      if (document.readyState === 'loading')
+        document.addEventListener('DOMContentLoaded', loadTickets);
+      else
+        loadTickets();
+    })();
+  </script>
+
+</body>
+
+</html>

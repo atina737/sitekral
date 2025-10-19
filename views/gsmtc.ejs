@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('includes/head') %>
+</head>
+
+<body>
+    <!-- Begin page -->
+    <div class="wrapper">
+        
+        <%- include('includes/sidebar') %>
+        <%- include('includes/topbar') %>
+
+        <div class="page-content">
+            <div class="page-container">
+                
+                <div class="page-title-head d-flex align-items-center gap-2">
+                    <div class="flex-grow-1">
+                        <h4 class="fs-17 mb-0">GSM → TC Sorgu</h4>
+                    </div>
+                    <div class="text-end">
+                        <ol class="breadcrumb m-0 py-0 fs-13">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);"><%= name %></a></li>
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Sorgular</a></li>
+                            <li class="breadcrumb-item active">GSM → TC</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Alert Box -->
+                <div id="gsmtcAlert" class="alert alert-danger d-none" role="alert"></div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header border-bottom border-dashed d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h4 class="card-title mb-1">GSM → TC Sorgulama</h4>
+                                    <small class="text-muted">Telefon numarası ile TC kimlik numarasını sorgulayabilirsiniz.</small>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-info-subtle text-info">
+                                        <i class="ti ti-phone-call me-1"></i>GSM → TC
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <form id="searchForm">
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <label for="gsm" class="form-label">GSM Numarası <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="ti ti-phone"></i></span>
+                                                <input type="text" id="gsm" name="gsm" class="form-control" placeholder="Örn: 5321234567" maxlength="10" required>
+                                            </div>
+                                            <div class="form-text">10 haneli GSM numarasını girin</div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-12 text-center">
+                                            <button type="submit" class="btn btn-info px-4 py-2">
+                                                <i class="ti ti-search me-2"></i>Sorgula
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="row mt-4" id="resultsSection" style="display: none;">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header border-bottom border-dashed d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h4 class="card-title mb-1">Sorgu Sonuçları</h4>
+                                    <small class="text-muted" id="resultCount">Sonuçlar yükleniyor...</small>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <button class="btn btn-outline-success btn-sm" id="exportBtn" style="display: none;">
+                                        <i class="ti ti-download me-1"></i>Dışa Aktar
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" id="backToFormBtn">
+                                        <i class="ti ti-arrow-left me-1"></i>Geri
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="resultsBody">
+                                    <!-- Sonuçlar buraya gelecek -->
+                                </div>
+                                <div class="text-center py-5" id="noResults" style="display: none;">
+                                    <div class="bg-light rounded-4 p-5">
+                                        <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                                            <i class="ti ti-phone-off fs-1 text-warning"></i>
+                                        </div>
+                                        <h5 class="fw-bold text-dark mb-2">Sonuç Bulunamadı</h5>
+                                        <p class="text-muted mb-0">Bu GSM numarası için TC kimlik numarası bulunamadı.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <%- include('includes/footer') %>
+    </div>
+
+    <!-- Vendor js -->
+    <script src="/assets/js/vendor.min.js"></script>
+    <script src="/assets/js/app.js"></script>
+
+    <script>
+        // Global variables
+        window.csrfToken = '<%= csrf %>';
+        window.userEmail = '<%= user?.email %>';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.getElementById('searchForm');
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsBody = document.getElementById('resultsBody');
+            const noResults = document.getElementById('noResults');
+            const resultCount = document.getElementById('resultCount');
+            const backToFormBtn = document.getElementById('backToFormBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            const alertBox = document.getElementById('gsmtcAlert');
+
+            // Form submission
+            searchForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const gsm = document.getElementById('gsm').value.trim();
+                
+                if (!gsm || gsm.length !== 10) {
+                    showAlert('Lütfen geçerli bir GSM numarası girin.', 'danger');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/gsmtc', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-Token': window.csrfToken
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify({ gsm })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.ok) {
+                        if (data.data && data.data.length > 0) {
+                            renderResults(data.data);
+                            resultsSection.style.display = 'block';
+                            searchForm.style.display = 'none';
+                        } else {
+                            showNoResults();
+                        }
+                    } else {
+                        showAlert(data.message || 'Sorgu başarısız.', 'danger');
+                    }
+                } catch (error) {
+                    showAlert('Bir hata oluştu. Lütfen tekrar deneyin.', 'danger');
+                }
+            });
+
+            // Back to form
+            backToFormBtn.addEventListener('click', function() {
+                resultsSection.style.display = 'none';
+                searchForm.style.display = 'block';
+                document.getElementById('gsm').value = '';
+            });
+
+            function renderResults(data) {
+                if (!data || data.length === 0) {
+                    resultsBody.innerHTML = '';
+                    if (noResults) noResults.style.display = 'block';
+                    if (resultCount) resultCount.textContent = '0 sonuç';
+                    return;
+                }
+
+                if (noResults) noResults.style.display = 'none';
+                if (resultCount) resultCount.textContent = `${data.length} kayıt bulundu`;
+
+                resultsBody.innerHTML = data.map((item, index) => `
+                    <div class="result-item mb-3 p-3 rounded-3 border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px);">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="badge bg-info text-white rounded-pill px-3 py-2 shadow-sm" style="font-size: 0.8rem; font-weight: 700;">
+                                    #${index + 1}
+                                </span>
+                                <div>
+                                    <h6 class="text-white fw-bold mb-0">TC: ${item.TC || 'N/A'}</h6>
+                                    <small class="text-muted">GSM: ${item.GSM || 'N/A'}</small>
+                                </div>
+                            </div>
+                            <span class="badge bg-info-subtle text-info fw-semibold shadow-sm" style="font-size: 0.8rem; padding: 0.5rem 0.8rem; border-radius: 20px;">
+                                <i class="ti ti-id me-1"></i>TC
+                            </span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function showNoResults() {
+                noResults.style.display = 'block';
+                resultsSection.style.display = 'block';
+                searchForm.style.display = 'none';
+            }
+
+            function showAlert(message, type) {
+                alertBox.textContent = message;
+                alertBox.className = `alert alert-${type}`;
+                alertBox.classList.remove('d-none');
+                setTimeout(() => {
+                    alertBox.classList.add('d-none');
+                }, 5000);
+            }
+        });
+    </script>
+
+</body>
+
+    <script src="/assets/js/vendor.min.js"></script>
+    <script src="/assets/js/app.js"></script>
+
+</html>

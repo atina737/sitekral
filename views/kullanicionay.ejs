@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('includes/head') %>
+</head>
+
+<body>
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        
+        <%- include('includes/sidebar') %>
+        
+
+                <%- include('includes/topbar') %>
+
+
+        <div class="page-content">
+
+            <div class="page-container">
+
+                
+                <div class="page-title-head d-flex align-items-center gap-2">
+                    <div class="flex-grow-1">
+                        <h4 class="fs-17 mb-0">Kullanıcı Onayı</h4>
+                    </div>
+
+                    <div class="text-end">
+                        <ol class="breadcrumb m-0 py-0 fs-13">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">admin</a></li>
+                            
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">atina</a></li>
+                            
+                            <li class="breadcrumb-item active">kullanıcı onayı</li>
+                        </ol>
+                    </div>
+                </div>
+                
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="d-flex card-header justify-content-between align-items-center">
+                                <h4 class="card-title">Onay Bekleyen Kullanıcılar</h4>
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="search" class="form-control form-control-sm" id="approveSearch" placeholder="Ara..." style="max-width:240px;">
+                                    <button class="btn btn-soft-secondary btn-sm" id="btnReloadList"><i class="ti ti-refresh"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="bg-light bg-opacity-50 py-1 text-center">
+                                    <p class="m-0"><b></b> Yönetici onayı bekleyen kayıtlar <span class="fw-medium"></span></p>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-custom table-centered table-sm table-nowrap table-hover mb-0" id="pendingTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Ad</th>
+                                                <th>E-posta</th>
+                                                <th>IP</th>
+                                                <th>Başvuru</th>
+                                                <th class="text-end">İşlem</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if (pendingUsers && pendingUsers.length > 0) { %>
+                                                <% pendingUsers.forEach(function(u){ %>
+                                                <% var initial = (u.name && u.name[0]) || (u.email && u.email[0]) || 'U'; %>
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="avatar-md flex-shrink-0 me-2">
+                                                                <span class="avatar-title bg-primary-subtle rounded-circle text-primary fw-semibold" style="width:35px; height:35px; display:flex; align-items:center; justify-content:center;">
+                                                                    <%= initial.toUpperCase() %>
+                                                                </span>
+                                                            </div>
+                                                            <div>
+                                                                <div class="fw-semibold"><%= u.name || u.email %></div>
+                                                                <small class="text-muted"><i class="ti ti-mail me-1"></i><%= u.email %></small>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge bg-info-subtle text-info"><i class="ti ti-at me-1"></i><%= u.email %></span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge bg-secondary-subtle text-secondary"><i class="ti ti-world me-1"></i><%= u.ip || '-' %></span>
+                                                    </td>
+                                                    <td>
+                                                        <small class="text-muted"><i class="ti ti-clock me-1"></i><%= timeAgo(u.createdAt) %></small>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <button class="btn btn-success btn-sm me-1" data-act="approve" data-id="<%= u.id %>" title="Onayla"><i class="ti ti-check"></i></button>
+                                                        <button class="btn btn-outline-danger btn-sm" data-act="reject" data-id="<%= u.id %>" title="Reddet"><i class="ti ti-x"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="5" class="text-center">Bekleyen kayıt yok.</td>
+                                                </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+
+            </div> <!-- container -->
+
+
+            <!-- Footer Start -->
+           <%- include('includes/footer') %>
+            <!-- end Footer -->
+
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- End Page content -->
+        <!-- ============================================================== -->
+
+    </div>
+    <!-- END wrapper -->
+
+ 
+
+    <!-- Vendor js -->
+    <script src="assets/js/vendor.min.js"></script>
+
+    <!-- App js -->
+    <script src="assets/js/app.js"></script>
+    <script>
+    (function(){
+        var CSRF = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        function onClick(e){
+            var t = e.target.closest('[data-act]');
+            if (!t) return;
+            var id = t.getAttribute('data-id');
+            var act = t.getAttribute('data-act');
+            if (!id) return;
+            if (act === 'approve') {
+                fetch('/api/pending-users/'+encodeURIComponent(id)+'/approve', {method:'POST',headers:{'Content-Type':'application/json','x-csrf-token':CSRF},credentials:'same-origin'})
+                .then(r=>r.json()).then(function(resp){ if(resp&&resp.ok){ location.reload(); } });
+            } else if (act === 'reject') {
+                fetch('/api/pending-users/'+encodeURIComponent(id), {method:'DELETE',headers:{'Content-Type':'application/json','x-csrf-token':CSRF},credentials:'same-origin'})
+                .then(r=>r.json()).then(function(resp){ if(resp&&resp.ok){ location.reload(); } });
+            }
+        }
+        document.addEventListener('click', onClick);
+
+        var search = document.getElementById('approveSearch');
+        if (search) {
+          search.addEventListener('input', function(){
+            var q = search.value.toLowerCase();
+            var rows = document.querySelectorAll('#pendingTable tbody tr');
+            rows.forEach(function(tr){
+              var text = tr.textContent.toLowerCase();
+              tr.style.display = text.indexOf(q) !== -1 ? '' : 'none';
+            });
+          });
+        }
+        var btnReload = document.getElementById('btnReloadList');
+        if (btnReload) btnReload.addEventListener('click', function(){ location.reload(); });
+    })();
+    </script>
+
+</body>
+
+</html>

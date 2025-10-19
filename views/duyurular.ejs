@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+ <%- include('includes/head') %>
+ 
+</head>
+
+<body>
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        
+        <%- include('includes/sidebar') %>
+        
+
+                <%- include('includes/topbar') %>
+
+                
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+        <div class="page-content">
+
+            <div class="page-container">
+
+                
+                <div class="page-title-head d-flex align-items-center gap-2">
+                    <div class="flex-grow-1">
+                        <h4 class="fs-17 mb-0">Duyurular</h4>
+                    </div>
+                    <div class="text-end">
+                        <ol class="breadcrumb m-0 py-0 fs-13">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Admin</a></li>
+                            
+                           
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Alert Box -->
+                <div id="duyuruAlert" class="alert alert-danger d-none" role="alert"></div>
+
+                
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header border-bottom card-tabs d-flex flex-wrap align-items-center gap-2">
+                <div class="flex-grow-1">
+                    <h4 class="card-title">Duyuru Yönetimi</h4>
+                </div>
+                <div class="d-flex gap-2">
+                    <div class="border rounded d-flex flex-row align-items-center" id="top-search">
+                        <i class="ti ti-search text-muted fs-18 ps-2"></i>
+                        <input type="search" class="form-control border-0" id="search-modal-input" placeholder="Duyuru ara...">
+                    </div>
+                    <button type="button" class="btn btn-success shadow-sm rounded-pill d-flex align-items-center px-3" data-bs-toggle="modal" data-bs-target="#createDuyuruModal" title="Yeni duyuru ekle">
+                        <i class="ti ti-plus fs-18 me-1"></i>
+                        <span class="d-none d-sm-inline">Yeni Duyuru Ekle</span>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="fs-12 text-uppercase text-muted">Başlık</th>
+                                <th class="fs-12 text-uppercase text-muted">Tür</th>
+                                <th class="fs-12 text-uppercase text-muted">Durum</th>
+                                <th class="fs-12 text-uppercase text-muted">Oluşturan</th>
+                                <th class="fs-12 text-uppercase text-muted">Tarih</th>
+                                <th class="fs-12 text-uppercase text-muted text-center">İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="duyuruTableBody">
+                            <!-- Duyurular buraya yüklenecek -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="noDuyuruMessage" class="text-center py-5 d-none">
+                    <div class="mb-3">
+                        <i class="ti ti-bell-off text-muted" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="text-muted">Henüz duyuru yok</h5>
+                    <p class="text-muted">Yeni duyuru eklemek için yukarıdaki butona tıklayın.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Yeni Duyuru Oluştur Modal -->
+<div class="modal fade" id="createDuyuruModal" tabindex="-1" aria-labelledby="createDuyuruModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createDuyuruModalLabel">Yeni Duyuru Oluştur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createDuyuruForm">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label for="duyuruTitle" class="form-label">Başlık <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="duyuruTitle" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="duyuruType" class="form-label">Tür <span class="text-danger">*</span></label>
+                            <select class="form-select" id="duyuruType" required>
+                                <option value="">Seçiniz</option>
+                                <option value="Bilgi">Bilgi</option>
+                                <option value="Uyarı">Uyarı</option>
+                                <option value="Başarı">Başarı</option>
+                                <option value="Hata">Hata</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="duyuruIcon" class="form-label">İkon</label>
+                            <select class="form-select" id="duyuruIcon">
+                                <option value="ti ti-info-circle">Bilgi</option>
+                                <option value="ti ti-alert-triangle">Uyarı</option>
+                                <option value="ti ti-check">Başarı</option>
+                                <option value="ti ti-x">Hata</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="duyuruActive" class="form-label">Durum</label>
+                            <select class="form-select" id="duyuruActive">
+                                <option value="true">Aktif</option>
+                                <option value="false">Pasif</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="duyuruText" class="form-label">İçerik <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="duyuruText" rows="4" required></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary" id="createDuyuruBtn">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Duyuru Düzenle Modal -->
+<div class="modal fade" id="editDuyuruModal" tabindex="-1" aria-labelledby="editDuyuruModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editDuyuruModalLabel">Duyuru Düzenle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editDuyuruForm">
+                    <input type="hidden" id="editDuyuruId">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label for="editDuyuruTitle" class="form-label">Başlık <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="editDuyuruTitle" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="editDuyuruType" class="form-label">Tür <span class="text-danger">*</span></label>
+                            <select class="form-select" id="editDuyuruType" required>
+                                <option value="">Seçiniz</option>
+                                <option value="Bilgi">Bilgi</option>
+                                <option value="Uyarı">Uyarı</option>
+                                <option value="Başarı">Başarı</option>
+                                <option value="Hata">Hata</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="editDuyuruIcon" class="form-label">İkon</label>
+                            <select class="form-select" id="editDuyuruIcon">
+                                <option value="ti ti-info-circle">Bilgi</option>
+                                <option value="ti ti-alert-triangle">Uyarı</option>
+                                <option value="ti ti-check">Başarı</option>
+                                <option value="ti ti-x">Hata</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="editDuyuruActive" class="form-label">Durum</label>
+                            <select class="form-select" id="editDuyuruActive">
+                                <option value="true">Aktif</option>
+                                <option value="false">Pasif</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="editDuyuruText" class="form-label">İçerik <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="editDuyuruText" rows="4" required></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary" id="updateDuyuruBtn">Güncelle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+        <!-- container -->
+
+    </div>
+    <!-- End Page content -->
+      <%- include('includes/footer') %>
+
+</div>
+<!-- END wrapper -->
+
+<script>
+let duyurular = [];
+
+// Custom Alert System
+function showAlert(message, type = 'success') {
+    const alertBox = document.getElementById('duyuruAlert');
+    if (!alertBox) return;
+    
+    alertBox.textContent = message || '';
+    alertBox.className = `alert alert-${type}`;
+    alertBox.classList.remove('d-none');
+    
+    setTimeout(() => {
+        alertBox.classList.add('d-none');
+    }, 4000);
+}
+
+// Load duyurular
+async function loadDuyurular() {
+    try {
+        const response = await fetch('/api/duyurular');
+        const data = await response.json();
+        if (data.ok) {
+            duyurular = data.duyurular || [];
+            renderDuyurular();
+        } else {
+            showAlert('Duyurular yüklenemedi', 'danger');
+        }
+    } catch (error) {
+        console.error('Duyurular yüklenirken hata:', error);
+        showAlert('Duyurular yüklenemedi', 'danger');
+    }
+}
+
+// Render duyurular to table
+function renderDuyurular() {
+    const tbody = document.getElementById('duyuruTableBody');
+    const noMessage = document.getElementById('noDuyuruMessage');
+    
+    if (!tbody) return;
+    
+    if (duyurular.length === 0) {
+        tbody.innerHTML = '';
+        noMessage.classList.remove('d-none');
+        return;
+    }
+    
+    noMessage.classList.add('d-none');
+    tbody.innerHTML = duyurular.map(duyuru => `
+        <tr>
+            <td>
+                <div class="d-flex align-items-center gap-2">
+                    <i class="${duyuru.icon || 'ti ti-bell'} text-primary"></i>
+                    <span class="fw-semibold">${duyuru.title || 'Başlık Yok'}</span>
+                </div>
+            </td>
+            <td>
+                <span class="badge ${getDuyuruTypeBadge(duyuru.type)}">${duyuru.type || 'Genel'}</span>
+            </td>
+            <td>
+                <span class="badge ${duyuru.active ? 'bg-success' : 'bg-secondary'}">
+                    ${duyuru.active ? 'Aktif' : 'Pasif'}
+                </span>
+            </td>
+            <td>
+                <div class="d-flex align-items-center gap-2">
+                    <i class="ti ti-user text-muted"></i>
+                    <span>${duyuru.admin || 'Admin'}</span>
+                </div>
+            </td>
+            <td>
+                <span class="text-muted">${formatDate(duyuru.date)}</span>
+            </td>
+            <td class="text-center">
+                <div class="d-flex align-items-center justify-content-center gap-1">
+                    <button class="btn btn-sm btn-outline-warning btn-icon" onclick="editDuyuru('${duyuru.id}')" title="Düzenle">
+                        <i class="ti ti-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger btn-icon" onclick="deleteDuyuru('${duyuru.id}')" title="Sil">
+                        <i class="ti ti-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+// Get duyuru type badge class
+function getDuyuruTypeBadge(type) {
+    switch(type) {
+        case 'Bilgi': return 'bg-info-subtle text-info';
+        case 'Uyarı': return 'bg-warning-subtle text-warning';
+        case 'Başarı': return 'bg-success-subtle text-success';
+        case 'Hata': return 'bg-danger-subtle text-danger';
+        default: return 'bg-secondary-subtle text-secondary';
+    }
+}
+
+// Format date
+function formatDate(dateStr) {
+    if (!dateStr) return '-';
+    try {
+        return new Date(dateStr).toLocaleDateString('tr-TR');
+    } catch (error) {
+        return '-';
+    }
+}
+
+// Edit duyuru
+function editDuyuru(id) {
+    const duyuru = duyurular.find(d => d.id === id);
+    if (!duyuru) return;
+    
+    document.getElementById('editDuyuruId').value = duyuru.id;
+    document.getElementById('editDuyuruTitle').value = duyuru.title || '';
+    document.getElementById('editDuyuruType').value = duyuru.type || '';
+    document.getElementById('editDuyuruIcon').value = duyuru.icon || 'ti ti-bell';
+    document.getElementById('editDuyuruActive').value = duyuru.active ? 'true' : 'false';
+    document.getElementById('editDuyuruText').value = duyuru.text || '';
+    
+    const modal = new bootstrap.Modal(document.getElementById('editDuyuruModal'));
+    modal.show();
+}
+
+// Delete duyuru
+function deleteDuyuru(id) {
+    if (!window.Swal) {
+        showAlert('SweetAlert2 yüklü değil', 'danger');
+        return;
+    }
+    
+    Swal.fire({
+        title: 'Emin misiniz?',
+        text: 'Bu duyuru silinecek!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Evet, sil!',
+        cancelButtonText: 'İptal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/api/duyurular/${id}`, {
+                method: 'DELETE',
+                credentials: 'same-origin'
+            })
+            .then(r => r.json())
+            .then(resp => {
+                if (resp && resp.ok) {
+                    Swal.fire('Silindi!', 'Duyuru başarıyla silindi.', 'success');
+                    loadDuyurular();
+                } else {
+                    Swal.fire('Hata!', 'Duyuru silinemedi.', 'error');
+                }
+            })
+            .catch(() => Swal.fire('Hata!', 'Bir hata oluştu.', 'error'));
+        }
+    });
+}
+
+// Search functionality
+function searchDuyurular() {
+    const searchTerm = document.getElementById('search-modal-input').value.toLowerCase();
+    const filteredDuyurular = duyurular.filter(duyuru => 
+        (duyuru.title || '').toLowerCase().includes(searchTerm) ||
+        (duyuru.text || '').toLowerCase().includes(searchTerm) ||
+        (duyuru.type || '').toLowerCase().includes(searchTerm)
+    );
+    
+    // Temporarily replace duyurular with filtered results
+    const originalDuyurular = duyurular;
+    duyurular = filteredDuyurular;
+    renderDuyurular();
+    duyurular = originalDuyurular;
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    loadDuyurular();
+    
+    // Search
+    document.getElementById('search-modal-input').addEventListener('input', searchDuyurular);
+    
+    // Create duyuru
+    document.getElementById('createDuyuruBtn').addEventListener('click', function() {
+        const title = document.getElementById('duyuruTitle').value.trim();
+        const type = document.getElementById('duyuruType').value;
+        const icon = document.getElementById('duyuruIcon').value;
+        const active = document.getElementById('duyuruActive').value === 'true';
+        const text = document.getElementById('duyuruText').value.trim();
+        
+        if (!title || !type || !text) {
+            showAlert('Lütfen tüm zorunlu alanları doldurun', 'danger');
+            return;
+        }
+        
+        const btn = this;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Kaydediliyor...';
+        
+        fetch('/api/duyurular', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({ title, type, icon, text, active })
+        })
+        .then(r => r.json())
+        .then(resp => {
+            if (resp && resp.ok) {
+                showAlert('Duyuru başarıyla eklendi', 'success');
+                document.getElementById('createDuyuruForm').reset();
+                const modal = bootstrap.Modal.getInstance(document.getElementById('createDuyuruModal'));
+                modal.hide();
+                loadDuyurular();
+            } else {
+                showAlert(resp.message || 'Duyuru eklenemedi', 'danger');
+            }
+        })
+        .catch(() => showAlert('Duyuru eklenemedi', 'danger'))
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = 'Kaydet';
+        });
+    });
+    
+    // Update duyuru
+    document.getElementById('updateDuyuruBtn').addEventListener('click', function() {
+        const id = document.getElementById('editDuyuruId').value;
+        const title = document.getElementById('editDuyuruTitle').value.trim();
+        const type = document.getElementById('editDuyuruType').value;
+        const icon = document.getElementById('editDuyuruIcon').value;
+        const active = document.getElementById('editDuyuruActive').value === 'true';
+        const text = document.getElementById('editDuyuruText').value.trim();
+        
+        if (!id || !title || !type || !text) {
+            showAlert('Lütfen tüm zorunlu alanları doldurun', 'danger');
+            return;
+        }
+        
+        const btn = this;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Güncelleniyor...';
+        
+        fetch(`/api/duyurular/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({ title, type, icon, text, active })
+        })
+        .then(r => r.json())
+        .then(resp => {
+            if (resp && resp.ok) {
+                showAlert('Duyuru başarıyla güncellendi', 'success');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editDuyuruModal'));
+                modal.hide();
+                loadDuyurular();
+            } else {
+                showAlert(resp.message || 'Duyuru güncellenemedi', 'danger');
+            }
+        })
+        .catch(() => showAlert('Duyuru güncellenemedi', 'danger'))
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = 'Güncelle';
+        });
+    });
+});
+</script>
+
+</body>
+    <!-- Vendor js -->
+    <script src="assets/js/vendor.min.js"></script>
+
+    <!-- App js -->
+    <script src="assets/js/app.js"></script>
+
+
+</html>

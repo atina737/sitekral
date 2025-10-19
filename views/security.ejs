@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('includes/head') %>
+  <title>Güvenlik Dashboard | Atina</title>
+  <style>
+    .security-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    
+    .security-metric {
+      text-align: center;
+      padding: 15px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      margin: 10px 0;
+    }
+    
+    .security-metric h3 {
+      font-size: 2rem;
+      margin: 0;
+      color: #fff;
+    }
+    
+    .security-metric p {
+      margin: 5px 0 0 0;
+      opacity: 0.8;
+    }
+    
+    .threat-level {
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    
+    .threat-low { background: #4CAF50; color: white; }
+    .threat-medium { background: #FF9800; color: white; }
+    .threat-high { background: #F44336; color: white; }
+    
+    .log-entry {
+      background: #f8f9fa;
+      border-left: 4px solid #007bff;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 0 5px 5px 0;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+    
+    .log-entry.error { border-left-color: #dc3545; }
+    .log-entry.warning { border-left-color: #ffc107; }
+    .log-entry.success { border-left-color: #28a745; }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <%- include('includes/sidebar') %>
+    <%- include('includes/topbar') %>
+
+    <div class="page-content">
+      <div class="page-container">
+        <div class="page-title-head d-flex align-items-center gap-2">
+          <div class="flex-grow-1">
+            <h4 class="fs-17 mb-0">🛡️ Güvenlik Dashboard</h4>
+          </div>
+          <div class="text-end">
+            <ol class="breadcrumb m-0 py-0 fs-13">
+              <li class="breadcrumb-item"><a href="javascript: void(0);">admin</a></li>
+              <li class="breadcrumb-item"><a href="javascript: void(0);">atina</a></li>
+              <li class="breadcrumb-item active">güvenlik</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Güvenlik Durumu -->
+        <div class="row">
+          <div class="col-12">
+            <div class="security-card">
+              <h5 class="mb-3">🔒 Güvenlik Durumu</h5>
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="security-metric">
+                    <h3 id="securityScore">95</h3>
+                    <p>Güvenlik Skoru</p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="security-metric">
+                    <h3 id="blockedIPs">0</h3>
+                    <p>Engellenen IP</p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="security-metric">
+                    <h3 id="suspiciousIPs">0</h3>
+                    <p>Şüpheli IP</p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="security-metric">
+                    <h3 id="threatLevel" class="threat-level threat-low">DÜŞÜK</h3>
+                    <p>Tehdit Seviyesi</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Güvenlik Özellikleri -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">🛡️ Aktif Güvenlik Özellikleri</h5>
+              </div>
+              <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                  <i class="fas fa-shield-alt text-success me-3"></i>
+                  <div>
+                    <h6 class="mb-1">Rate Limiting</h6>
+                    <small class="text-muted">200 istek/15 dakika</small>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                  <i class="fas fa-robot text-warning me-3"></i>
+                  <div>
+                    <h6 class="mb-1">Bot Koruması</h6>
+                    <small class="text-muted">Otomatik bot tespiti</small>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                  <i class="fas fa-ban text-danger me-3"></i>
+                  <div>
+                    <h6 class="mb-1">XSS Koruması</h6>
+                    <small class="text-muted">Cross-site scripting engelleme</small>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                  <i class="fas fa-database text-info me-3"></i>
+                  <div>
+                    <h6 class="mb-1">SQL Injection Koruması</h6>
+                    <small class="text-muted">Veritabanı saldırı engelleme</small>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                  <i class="fas fa-eye text-primary me-3"></i>
+                  <div>
+                    <h6 class="mb-1">Aktivite İzleme</h6>
+                    <small class="text-muted">Tüm istekler loglanıyor</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">📊 Güvenlik İstatistikleri</h5>
+              </div>
+              <div class="card-body">
+                <div class="row text-center">
+                  <div class="col-6">
+                    <h4 class="text-success" id="totalRequests">0</h4>
+                    <small class="text-muted">Toplam İstek</small>
+                  </div>
+                  <div class="col-6">
+                    <h4 class="text-warning" id="blockedRequests">0</h4>
+                    <small class="text-muted">Engellenen İstek</small>
+                  </div>
+                </div>
+                <hr>
+                <div class="row text-center">
+                  <div class="col-6">
+                    <h4 class="text-info" id="uniqueIPs">0</h4>
+                    <small class="text-muted">Benzersiz IP</small>
+                  </div>
+                  <div class="col-6">
+                    <h4 class="text-danger" id="errorCount">0</h4>
+                    <small class="text-muted">Hata Sayısı</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Son Güvenlik Olayları -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">🚨 Son Güvenlik Olayları</h5>
+                <button class="btn btn-sm btn-outline-primary" onclick="refreshLogs()">
+                  <i class="fas fa-sync-alt"></i> Yenile
+                </button>
+              </div>
+              <div class="card-body">
+                <div id="securityLogs">
+                  <div class="text-center text-muted">
+                    <i class="fas fa-spinner fa-spin"></i> Güvenlik logları yükleniyor...
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('includes/footer') %>
+  </div>
+
+  <script>
+    // Güvenlik dashboard verilerini yükle
+    function loadSecurityData() {
+      // Sahte veriler (gerçek uygulamada API'den gelecek)
+      document.getElementById('securityScore').textContent = Math.floor(Math.random() * 20) + 80;
+      document.getElementById('blockedIPs').textContent = Math.floor(Math.random() * 10);
+      document.getElementById('suspiciousIPs').textContent = Math.floor(Math.random() * 5);
+      document.getElementById('totalRequests').textContent = Math.floor(Math.random() * 1000) + 500;
+      document.getElementById('blockedRequests').textContent = Math.floor(Math.random() * 50);
+      document.getElementById('uniqueIPs').textContent = Math.floor(Math.random() * 100) + 50;
+      document.getElementById('errorCount').textContent = Math.floor(Math.random() * 20);
+      
+      // Tehdit seviyesi
+      const threatLevel = document.getElementById('threatLevel');
+      const score = parseInt(document.getElementById('securityScore').textContent);
+      if (score >= 90) {
+        threatLevel.className = 'threat-level threat-low';
+        threatLevel.textContent = 'DÜŞÜK';
+      } else if (score >= 70) {
+        threatLevel.className = 'threat-level threat-medium';
+        threatLevel.textContent = 'ORTA';
+      } else {
+        threatLevel.className = 'threat-level threat-high';
+        threatLevel.textContent = 'YÜKSEK';
+      }
+    }
+
+    // Güvenlik loglarını yükle
+    function loadSecurityLogs() {
+      const logsContainer = document.getElementById('securityLogs');
+      const sampleLogs = [
+        { type: 'success', message: 'Güvenlik sistemi başlatıldı', time: new Date().toLocaleTimeString() },
+        { type: 'info', message: 'Rate limiting aktif', time: new Date(Date.now() - 300000).toLocaleTimeString() },
+        { type: 'warning', message: 'Şüpheli IP tespit edildi: 192.168.1.100', time: new Date(Date.now() - 600000).toLocaleTimeString() },
+        { type: 'error', message: 'Bot trafiği engellendi', time: new Date(Date.now() - 900000).toLocaleTimeString() },
+        { type: 'info', message: 'XSS koruması aktif', time: new Date(Date.now() - 1200000).toLocaleTimeString() }
+      ];
+
+      logsContainer.innerHTML = sampleLogs.map(log => `
+        <div class="log-entry ${log.type}">
+          <strong>[${log.time}]</strong> ${log.message}
+        </div>
+      `).join('');
+    }
+
+    function refreshLogs() {
+      loadSecurityLogs();
+      loadSecurityData();
+    }
+
+    // Sayfa yüklendiğinde verileri yükle
+    document.addEventListener('DOMContentLoaded', function() {
+      loadSecurityData();
+      loadSecurityLogs();
+      
+      // Her 30 saniyede bir verileri güncelle
+      setInterval(loadSecurityData, 30000);
+    });
+  </script>
+</body>
+</html>

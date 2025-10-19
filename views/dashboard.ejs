@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+
+ <%- include('includes/head') %>
+
+<body>
+    <!-- Begin page -->
+    <div class="wrapper">
+
+        
+       
+
+           <%- include('includes/sidebar') %>
+               
+
+        <style>
+            body[data-sidebar-size="condensed"] .side-nav .collapse {
+    display: none !important;
+}
+        </style>
+        
+
+        <%- include('includes/topbar') %>
+
+    
+
+        <!-- Search Modal -->
+        <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content bg-transparent">
+                    <form>
+                        <div class="card mb-1">
+                            <div class="px-3 py-2 d-flex flex-row align-items-center" id="top-search">
+                                <i class="ti ti-search fs-22"></i>
+                                <input type="search" class="form-control border-0" id="search-modal-input" placeholder="Search for actions, people,">
+                                <button type="submit" class="btn p-0" data-bs-dismiss="modal" aria-label="Close">[esc]</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+        <div class="page-content">
+            <div class="page-container">
+
+                
+                <div class="page-title-head d-flex align-items-center gap-2">
+                    <div class="flex-grow-1">
+                        <h4 class="fs-17 mb-0">Ana Sayfa</h4>
+                    </div>
+
+                    <div class="text-end">
+                        <ol class="breadcrumb m-0 py-0 fs-13">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);"><%= name %></a></li>
+                            
+                            <li class="breadcrumb-item active">Atina</li>
+                        </ol>
+                    </div>
+                </div>
+                
+
+                
+
+                <div class="row row-cols-xxl-4 row-cols-md-2 row-cols-1">
+    
+                    <!-- Total Visitors -->
+                    <div class="col">
+                        <div class="card">
+                        <div class="card-body">
+                                <h5 class="text-muted fs-13 text-uppercase" title="Total Visitors">Kullanıcı Sayısı</h5>
+                                <div class="d-flex align-items-center gap-2 my-3">
+                                    <h3 class="mb-0"></span><%= totalUsers %></h3>
+                                    <i data-lucide="users" class="ms-auto display-2 position-absolute opacity-25 text-muted widget-icon"></i>
+                                </div>
+                                <p class="mb-0 text-muted">
+                                    
+                                    <span class="text-nowrap">Atina</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Unique Visitors -->
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="text-muted fs-13 text-uppercase" title="Unique Visitors">Üyelik Türü</h5>
+                                <div class="d-flex align-items-center gap-2 my-3">
+                                    <h3 class="mb-0"></span><%= roleName %></h3>
+                                    <i class="ti ti-user-hexagon ms-auto display-1 position-absolute opacity-25 text-muted widget-icon"></i>
+                                </div>
+                                <p class="mb-0 text-muted">
+                                    
+                                    <span class="text-nowrap">Atina</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                <link rel="stylesheet" href="https://storage.perfectcdn.com/css/font-awesome/css/all.min.css" />
+
+                    <!-- Page Views -->
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="text-muted fs-13 text-uppercase" title="Page Views">Çevrimiçi Kullanıcılar</h5>
+                                <div class="d-flex align-items-center gap-2 my-3">
+                                    <h3 class="mb-0"><span><%= onlineCount %></span></h3>
+                                    <i data-lucide="globe" class="fa-globle display-1 position-absolute opacity-25 text-muted widget-icon"></i>
+                                </div>
+                                <p class="mb-0 text-muted">
+                                    <% if (onlineUsers && onlineUsers.length > 0) { %>
+                                      <span class="text-nowrap">Atina 
+                                        <% onlineUsers.forEach(u => { %>
+                                          
+                                        <% }) %>
+                                      </span>
+                                    <% } else { %>
+                                      <span class="text-nowrap">Hiç kimse çevrimiçi değil</span>
+                                    <% } %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Bounce Rate -->
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="text-muted fs-13 text-uppercase" title="Bounce Rate">Üyelik Süresi</h5>
+                                <div class="d-flex align-items-center gap-2 my-3">
+                                    <h3 class="mb-0"><span ><%= membershipText %></span></h3>
+                                    <i class="ti ti-clock ms-auto display-1 position-absolute opacity-25 text-muted widget-icon"></i>
+                                </div>
+                                <p class="mb-0 text-muted">
+                                   <% if (membershipExpiresAt) { %>
+                                     <span class="text-nowrap">Bitiş: <%= new Date(membershipExpiresAt).toLocaleDateString('tr-TR') %></span>
+                                   <% } else { %>
+                                     <span class="text-nowrap">Atina</span>
+                                   <% } %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div><!-- end row -->
+                
+
+
+
+
+                <div class="row">
+                    <div class="col-xxl-12">
+                        <div class="card">
+                            <div class="d-flex card-header justify-content-between align-items-center">
+                                <h4 class="card-title">Son Giriş Yapanlar</h4>
+                                
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="bg-light bg-opacity-50 py-1 text-center">
+                                    <p class="m-0"><b></b> En son oturum açan üyeleri gösterir <span class="fw-medium"></span></p>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-custom table-centered table-sm table-nowrap table-hover mb-0">
+  <thead>
+    <tr>
+      <th>Kullanıcı</th>
+      <th>Son Giriş</th>
+      <th>Durumu</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (recentLogins && recentLogins.length > 0) { %>
+      <% recentLogins.forEach(user => { %>
+        <tr>
+          <td>
+            <div class="d-flex align-items-center">
+              <div class="avatar-md flex-shrink-0 me-2">
+                <% if(user.avatar) { %>
+                  <img src="<%= user.avatar %>" alt="<%= user.name %>" class="rounded-circle" width="30" height="30" />
+                <% } else { %>
+                  <span class="avatar-title text-bg-white  rounded-circle fw-semibold" style="width:35px; height:35px; display:flex; align-items:center; justify-content:center;">
+                    <i class="fa fa-user"></i>
+                  </span>
+                <% } %>
+              </div>
+              <div>
+                <h5 class="fs-14 mb-0"><%= user.name %></h5>
+              </div>
+            </div>
+          </td>
+          <td>
+            <% if(user.lastLoginAt) { %>
+              <small class="text-muted"><%= timeAgo(user.lastLoginAt) %></small>
+            <% } else { %>
+              <small class="text-muted">Bilinmiyor</small>
+            <% } %>
+          </td>
+          <td>
+            <i class="fa fa-circle fs-12 <%= (onlineUsers||[]).some(o => o.email === user.email) ? 'text-success' : 'text-secondary' %>"></i>
+            <%= (onlineUsers||[]).some(o => o.email === user.email) ? 'Çevrimiçi' : 'Çevrimdışı' %>
+          </td>
+        </tr>
+      <% }); %>
+    <% } else { %>
+      <tr>
+        <td colspan="3" class="text-center">Henüz oturum açan yok.</td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+                                </div> <!-- end table-responsive-->
+                            </div> <!-- end card-body-->
+
+                            
+
+                        </div> <!-- end card-->
+                    </div> <!-- end col-->
+
+                  <div class="col-xxl-12">
+    <div class="card card-h-100">
+        <div class="card-header d-flex flex-wrap align-items-center gap-2">
+            <h4 class="card-title me-auto">Duyurular</h4>
+            <div class="d-flex gap-2 justify-content-end text-end">
+                <!-- Filtre veya yeni duyuru butonu eklenebilir -->
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-custom table-centered table-sm table-nowrap table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Başlık</th>
+                            <th>Açıklama</th>
+                            <th>Tarih</th>
+                            <th>Durum</th>
+                          
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (duyurular && duyurular.length > 0) { %>
+                            <% duyurular.forEach(d => { %>
+                                                                <% 
+                                                                    let bgClass = 'bg-primary-subtle', iconClass = 'text-primary', iconName = 'ti ti-bell';
+                                                                    if (d.type === 'Bilgi') { bgClass = 'bg-info-subtle'; iconClass = 'text-info'; iconName = 'ti ti-info-circle'; }
+                                                                    else if (d.type === 'Uyarı') { bgClass = 'bg-warning-subtle'; iconClass = 'text-warning'; iconName = 'ti ti-alert-triangle'; }
+                                                                    else if (d.type === 'Başarı') { bgClass = 'bg-success-subtle'; iconClass = 'text-success'; iconName = 'ti ti-check'; }
+                                                                    else if (d.type === 'Hata') { bgClass = 'bg-danger-subtle'; iconClass = 'text-danger'; iconName = 'ti ti-x'; }
+                                                                %>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-md flex-shrink-0 me-2">
+                                                    <span class="avatar-title <%= bgClass %> rounded-circle">
+                                                        <i class="<%= iconName %> fs-18 <%= iconClass %>"></i>
+                                                    </span>
+                                            </div>
+                                            <div>
+                                                <h5 class="fs-16 mb-0"><%= d.title || 'Başlık Yok' %></h5>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="text-muted fs-14"><%= d.text %></span></td>
+                                    <td><span class="text-muted fs-12"><%= d.date ? new Date(d.date).toLocaleDateString('tr-TR') : '' %></span></td>
+                                    <td>
+                                        <h5 class="fs-14 mb-0 fw-normal">
+                                            <i class="ti ti-circle-filled fs-12 <%= d.active ? 'text-success' : 'text-secondary' %>"></i> <%= d.active ? 'Aktif' : 'Pasif' %>
+                                        </h5>
+                                    </td>
+                                   
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="5" class="text-center">Henüz duyuru yok.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+                            
+                            </div>
+                        </div> <!-- end card-->
+                    </div> <!-- end col-->
+                </div> <!-- end row-->
+
+            </div> <!-- container -->
+
+        <%- include('includes/footer') %>
+
+            
+
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- End Page content -->
+        <!-- ============================================================== -->
+
+    </div>
+    <!-- END wrapper -->
+
+    <!-- Theme Settings -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="theme-settings-offcanvas">
+        <div class="d-flex align-items-center gap-2 px-3 py-3 offcanvas-header border-bottom border-dashed">
+            <h5 class="flex-grow-1 mb-0">Theme Settings</h5>
+
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+
+        <div class="offcanvas-body p-0 h-100" data-simplebar>
+            <div class="p-3 border-bottom border-dashed">
+                <h5 class="mb-3 fw-bold">Color Scheme</h5>
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-check card-radio">
+                            <input class="form-check-input" type="radio" name="data-bs-theme" id="layout-color-light" value="light">
+                            <label class="form-check-label p-3 w-100 d-flex justify-content-center align-items-center" for="layout-color-light">
+                                <i class="ti ti-sun fs-32 text-muted"></i>
+                            </label>
+                        </div>
+                        <h5 class="fs-13 fw-semibold text-center text-muted mt-2">Light</h5>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-check card-radio">
+                            <input class="form-check-input" type="radio" name="data-bs-theme" id="layout-color-dark" value="dark">
+                            <label class="form-check-label p-3 w-100 d-flex justify-content-center align-items-center" for="layout-color-dark">
+                                <i class="ti ti-moon fs-32 text-muted"></i>
+                            </label>
+                        </div>
+                        <h5 class="fs-13 fw-semibold text-center text-muted mt-2">Dark</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 border-bottom border-dashed">
+                <h5 class="mb-3 fw-bold">Layout Mode</h5>
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-check card-radio">
+                            <input class="form-check-input" type="radio" name="data-layout-mode" id="layout-mode-fluid" value="fluid">
+                            <label class="form-check-label p-0 avatar-xl w-100" for="layout-mode-fluid">
+                                <div>
+                                    <span class="d-flex h-100">
+                                        <span class="flex-shrink-0">
+                                            <span class="bg-light d-flex h-100 border-end flex-column p-1 px-2">
+                                                <span class="d-block p-1 bg-dark-subtle rounded mb-1"></span>
+                                                <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                                <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                                <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                                <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                            </span>
+                                        </span>
+                                        <span class="flex-grow-1">
+                                            <span class="d-flex h-100 flex-column rounded-2">
+                                                <span class="bg-light d-block p-1"></span>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <span class="d-flex h-100 flex-column">
+                                        <span class="bg-light d-flex p-1 align-items-center border-bottom border-secondary border-opacity-25">
+                                            <span class="d-block p-1 bg-dark-subtle rounded me-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded ms-auto"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded ms-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded ms-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded ms-1"></span>
+                                        </span>
+                                        <span class="bg-light d-block p-1"></span>
+                                    </span>
+                                </div>
+                            </label>
+                        </div>
+                        <h5 class="fs-13 fw-semibold text-center text-muted mt-2">Fluid</h5>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-check sidebar-setting card-radio">
+                            <input class="form-check-input" type="radio" name="data-layout-mode" id="data-layout-detached" value="detached">
+                            <label class="form-check-label p-0 avatar-xl w-100" for="data-layout-detached">
+                                <span class="d-flex h-100 flex-column">
+                                    <span class="bg-light d-flex p-1 align-items-center border-bottom ">
+                                        <span class="d-block p-1 bg-dark-subtle rounded me-1"></span>
+                                        <span class="d-block border border-3 border-secondary border-opacity-25 rounded ms-auto"></span>
+                                        <span class="d-block border border-3 border-secondary border-opacity-25 rounded ms-1"></span>
+                                        <span class="d-block border border-3 border-secondary border-opacity-25 rounded ms-1"></span>
+                                        <span class="d-block border border-3 border-secondary border-opacity-25 rounded ms-1"></span>
+                                    </span>
+                                    <span class="d-flex h-100 p-1 px-2">
+                                        <span class="flex-shrink-0">
+                                            <span class="bg-light d-flex h-100 flex-column p-1 px-2">
+                                                <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                                <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                                <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100"></span>
+                                            </span>
+                                        </span>
+                                    </span>
+                                    <span class="bg-light d-block p-1 mt-auto px-2"></span>
+                                </span>
+
+                            </label>
+                        </div>
+                        <h5 class="fs-13 fw-semibold text-center text-muted mt-2">Detached</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 border-bottom border-dashed">
+                <h5 class="mb-3 fw-bold">Topbar Color</h5>
+
+                <div class="row">
+                    <div class="col-3">
+                        <div class="form-check card-radio">
+                            <input class="form-check-input" type="radio" name="data-topbar-color" id="topbar-color-light" value="light">
+                            <label class="form-check-label border-0 p-0 avatar-lg w-100 bg-light bg-opacity-50" for="topbar-color-light">
+                                <span class="d-flex align-items-center justify-content-center h-100">
+                                    <span class="p-2 d-inline-flex shadow rounded-circle bg-white"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <h5 class="fs-13 fw-semibold text-center text-muted mt-2">Light</h5>
+                    </div>
+
+                    <div class="col-3" style="--ct-dark-rgb: 64,73,84;">
+                        <div class="form-check card-radio">
+                            <input class="form-check-input" type="radio" name="data-topbar-color" id="topbar-color-dark" value="dark">
+                            <label class="form-check-label border-0 p-0 avatar-lg w-100 bg-light bg-opacity-50" for="topbar-color-dark">
+                                <span class="d-flex align-items-center justify-content-center h-100">
+                                    <span class="p-2 d-inline-flex shadow rounded-circle bg-dark"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <h5 class="fs-13 fw-semibold text-center text-muted mt-2">Dark</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 border-bottom border-dashed">
+                <h5 class="mb-3 fw-bold">Menu Color</h5>
+
+                <div class="row">
+                    <div class="col-3">
+                        <div class="form-check sidebar-setting card-radio">
+                            <input class="form-check-input" type="radio" name="data-menu-color" id="sidenav-color-light" value="light">
+                            <label class="form-check-label border-0 p-0 avatar-lg w-100 bg-light bg-opacity-50" for="sidenav-color-light">
+                                <span class="d-flex align-items-center justify-content-center h-100">
+                                    <span class="p-2 d-inline-flex shadow rounded-circle bg-white"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <h5 class="fs-13 fw-semibold text-center text-muted mt-2">Light</h5>
+                    </div>
+
+                    <div class="col-3" style="--ct-dark-rgb: 64,73,84;">
+                        <div class="form-check sidebar-setting card-radio">
+                            <input class="form-check-input" type="radio" name="data-menu-color" id="sidenav-color-dark" value="dark">
+                            <label class="form-check-label border-0 p-0 avatar-lg w-100 bg-light bg-opacity-50" for="sidenav-color-dark">
+                                <span class="d-flex align-items-center justify-content-center h-100">
+                                    <span class="p-2 d-inline-flex shadow rounded-circle bg-dark"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <h5 class="fs-13 fw-semibold text-center text-muted mt-2">Dark</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 .border-bottom .border-dashed">
+                <h5 class="mb-3 fw-bold">Sidebar Size</h5>
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-check sidebar-setting card-radio">
+                            <input class="form-check-input" type="radio" name="data-sidenav-size" id="sidenav-size-default" value="default">
+                            <label class="form-check-label p-0 avatar-xl w-100" for="sidenav-size-default">
+                                <span class="d-flex h-100">
+                                    <span class="flex-shrink-0">
+                                        <span class="bg-light d-flex h-100 border-end  flex-column p-1 px-2">
+                                            <span class="d-block p-1 bg-dark-subtle rounded mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                        </span>
+                                    </span>
+                                    <span class="flex-grow-1">
+                                        <span class="d-flex h-100 flex-column">
+                                            <span class="bg-light d-block p-1"></span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                        <h5 class="fs-13 fw-semibold text-center text-muted mt-2 mb-3">Default</h5>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-check sidebar-setting card-radio">
+                            <input class="form-check-input" type="radio" name="data-sidenav-size" id="sidenav-size-compact" value="compact">
+                            <label class="form-check-label p-0 avatar-xl w-100" for="sidenav-size-compact">
+                                <span class="d-flex h-100">
+                                    <span class="flex-shrink-0">
+                                        <span class="bg-light d-flex h-100 border-end  flex-column p-1">
+                                            <span class="d-block p-1 bg-dark-subtle rounded mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                        </span>
+                                    </span>
+                                    <span class="flex-grow-1">
+                                        <span class="d-flex h-100 flex-column">
+                                            <span class="bg-light d-block p-1"></span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                        <h5 class="fs-13 fw-semibold text-center text-muted mt-2 mb-3">Compact</h5>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-check sidebar-setting card-radio">
+                            <input class="form-check-input" type="radio" name="data-sidenav-size" id="sidenav-size-small" value="condensed">
+                            <label class="form-check-label p-0 avatar-xl w-100" for="sidenav-size-small">
+                                <span class="d-flex h-100">
+                                    <span class="flex-shrink-0">
+                                        <span class="bg-light d-flex h-100 border-end flex-column" style="padding: 2px;">
+                                            <span class="d-block p-1 bg-dark-subtle rounded mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                        </span>
+                                    </span>
+                                    <span class="flex-grow-1">
+                                        <span class="d-flex h-100 flex-column">
+                                            <span class="bg-light d-block p-1"></span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                        <h5 class="fs-13 fw-semibold text-center text-muted mt-2 mb-3">Condensed</h5>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-check sidebar-setting card-radio">
+                            <input class="form-check-input" type="radio" name="data-sidenav-size" id="sidenav-size-small-hover" value="sm-hover">
+                            <label class="form-check-label p-0 avatar-xl w-100" for="sidenav-size-small-hover">
+                                <span class="d-flex h-100">
+                                    <span class="flex-shrink-0">
+                                        <span class="bg-light d-flex h-100 border-end flex-column" style="padding: 2px;">
+                                            <span class="d-block p-1 bg-dark-subtle rounded mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                            <span class="d-block border border-3 border-secondary border-opacity-25 rounded w-100 mb-1"></span>
+                                        </span>
+                                    </span>
+                                    <span class="flex-grow-1">
+                                        <span class="d-flex h-100 flex-column">
+                                            <span class="bg-light d-block p-1"></span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                        <h5 class="fs-13 fw-semibold text-center text-muted mt-2">Hover View</h5>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-check sidebar-setting card-radio">
+                            <input class="form-check-input" type="radio" name="data-sidenav-size" id="sidenav-size-full" value="full">
+                            <label class="form-check-label p-0 avatar-xl w-100" for="sidenav-size-full">
+                                <span class="d-flex h-100">
+                                    <span class="flex-shrink-0">
+                                        <span class="d-flex h-100 flex-column">
+                                            <span class="d-block p-1 bg-dark-subtle mb-1"></span>
+                                        </span>
+                                    </span>
+                                    <span class="flex-grow-1">
+                                        <span class="d-flex h-100 flex-column">
+                                            <span class="bg-light d-block p-1"></span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                        <h5 class="fs-13 fw-semibold text-center text-muted mt-2">Full Layout</h5>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-check sidebar-setting card-radio">
+                            <input class="form-check-input" type="radio" name="data-sidenav-size" id="sidenav-size-fullscreen" value="fullscreen">
+                            <label class="form-check-label p-0 avatar-xl w-100" for="sidenav-size-fullscreen">
+                                <span class="d-flex h-100">
+                                    <span class="flex-grow-1">
+                                        <span class="d-flex h-100 flex-column">
+                                            <span class="bg-light d-block p-1"></span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                        <h5 class="fs-13 fw-semibold text-center text-muted mt-2">Hidden</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 border-bottom border-dashed d-none">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="fs-16 fw-bold mb-0">Container Width</h5>
+
+                    <div class="btn-group radio" role="group">
+                        <input type="radio" class="btn-check" name="data-container-position" id="container-width-fixed" value="fixed">
+                        <label class="btn btn-sm btn-soft-primary w-sm" for="container-width-fixed">Full</label>
+
+                        <input type="radio" class="btn-check" name="data-container-position" id="container-width-scrollable" value="scrollable">
+                        <label class="btn btn-sm btn-soft-primary w-sm ms-0" for="container-width-scrollable">Boxed</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 border-bottom border-dashed d-none">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="fs-16 fw-bold mb-0">Layout Position</h5>
+
+                    <div class="btn-group radio" role="group">
+                        <input type="radio" class="btn-check" name="data-layout-position" id="layout-position-fixed" value="fixed">
+                        <label class="btn btn-sm btn-soft-primary w-sm" for="layout-position-fixed">Fixed</label>
+
+                        <input type="radio" class="btn-check" name="data-layout-position" id="layout-position-scrollable" value="scrollable">
+                        <label class="btn btn-sm btn-soft-primary w-sm ms-0" for="layout-position-scrollable">Scrollable</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 px-3 py-2 offcanvas-header border-top border-dashed">
+            <button type="button" class="btn w-50 btn-soft-danger" id="reset-layout">Reset</button>
+            <button type="button" class="btn w-50 btn-soft-info">Buy Now</button>
+        </div>
+
+    </div>
+
+    <!-- Vendor js -->
+    <script src="/assets/js/vendor.min.js"></script>
+
+    <!-- App js -->
+    <script src="/assets/js/app.js"></script>
+
+    <!-- Apex Chart js -->
+    <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+
+    <!-- Projects Analytics Dashboard App js -->
+    <script src="/assets/js/pages/dashboard.js"></script>
+
+</body>
+
+</html>

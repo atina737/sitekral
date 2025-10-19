@@ -1,0 +1,280 @@
+{% extends "auth_base.html" %}
+
+{% block title %}Giriş - Atina{% endblock %}
+
+{% block body %}
+
+      
+
+    
+<body id="outside">
+    <div id="header" class="head-out">
+        <div class="hm-wrapper">
+            <button class="b-menu-close" onclick="noAuthMenu()" aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z"></path>
+                </svg>
+            </button>
+            <div class="container">
+                <div class="row row-btn align-items-center">
+                    <div class="col-lg-auto d-none d-lg-block">
+                        <div class="d-flex align-items-center">
+                            <div class="home-logo">
+                                <a href="" title="Atina - Güvenli Sorgu Sistemi">
+                               
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col text-center">
+                        <ul class="header-menu">
+                        </ul>
+                    </div>
+                    <div class="d-flex align-items-center">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main variables *content* -->
+    <section class="home-header">
+        <div class="home-fade">
+            <div>
+                <div class="hf-glow"></div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="header-content">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="home-content">
+                            <h2><span class="primary-color">Welcome to </span> Atina.</h2>
+                            <p><b>Güvenli sorgu sistemi</b></p>
+                            
+                            <div class="d-flex pt-3">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 offset-lg-1">
+                        <div class="login-card">
+                            <div class="card-body">
+                                <form id="loginForm" novalidate>
+                                    <input type="hidden" name="_csrf" value="{{ csrf }}">
+
+                                    <div id="loginError" class="alert d-none"></div>
+
+                                    <!-- Honeypot tuzakları (gizli) -->
+                                    <input type="text" name="honeypot" style="display: none;" tabindex="-1" autocomplete="off">
+                                    <input type="text" name="website" style="display: none;" tabindex="-1" autocomplete="off">
+                                    <input type="text" name="url" style="display: none;" tabindex="-1" autocomplete="off">
+                                    
+                                    <div class="form-group">
+                                        <label for="username">Kullanıcı Adı</label>
+                                        <input name="username" type="text" class="form-control" placeholder="Kullanıcı adınızı girin" required autocomplete="off">
+                                    </div>
+
+                                    <div class="form-group position-relative">
+                                        <label for="password">Şifre</label>
+                                        <input name="password" type="password" class="form-control" id="passwordInput"
+                                               placeholder="Şifrenizi girin" required autocomplete="off">
+                                        
+                                        <span class="show-pass position-absolute" 
+                                              style="top: 70%; right: 15px; transform: translateY(-50%); cursor: pointer; color: #37394d;">
+                                            <i class="fa fa-eye-slash" id="togglePassword"></i>
+                                        </span>
+                                    </div>
+
+                                    <div class="form-group d-flex justify-content-between"> 
+                                        <input type="checkbox" name="LoginForm[remember]" value="1" id="remember">
+                                        <label for="remember" class="hm-remember">Beni hatırla</label>
+                                    </div>
+
+                                    <!-- Gizli alanlar bot tespiti için -->
+                                    <input type="hidden" name="mouseEvents" id="mouseEvents" value="0">
+                                    <input type="hidden" name="keyboardEvents" id="keyboardEvents" value="0">
+                                    
+                                    <button type="submit" class="btn btn-primary text-center">
+                                        <i class="fas fa-sign-in-alt fa-lg"></i> Giriş yap
+                                    </button>
+                                </form>
+                                
+                                <a class="btn btn-secondary mt-2" href="{{ url_for('register') }}" title="Kayıt Ol">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M14 14.252V16.3414C13.3744 16.1203 12.7013 16 12 16C8.68629 16 6 18.6863 6 22H4C4 17.5817 7.58172 14 12 14C12.6906 14 13.3608 14.0875 14 14.252ZM12 13C8.685 13 6 10.315 6 7C6 3.685 8.685 1 12 1C15.315 1 18 3.685 18 7C18 10.315 15.315 13 12 13ZM12 11C14.21 11 16 9.21 16 7C16 4.79 14.21 3 12 3C9.79 3 8 4.79 8 7C8 9.21 9.79 11 12 11ZM18 17V14H20V17H23V19H20V22H18V19H15V17H18Z"></path>
+                                    </svg>
+                                    <span>Ücretsiz Kayıt Ol</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="outside-switcher" data-active="dark">
+        <button class="switcher-item light-btn" onclick="changeTheme('light')" aria-label="Light">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM11 1H13V4H11V1ZM11 20H13V23H11V20ZM3.51472 4.92893L4.92893 3.51472L7.05025 5.63604L5.63604 7.05025L3.51472 4.92893ZM16.9497 18.364L18.364 16.9497L20.4853 19.0711L19.0711 20.4853L16.9497 18.364ZM19.0711 3.51472L20.4853 4.92893L18.364 7.05025L16.9497 5.63604L19.0711 3.51472ZM5.63604 16.9497L7.05025 18.364L4.92893 20.4853L3.51472 19.0711L5.63604 16.9497ZM23 11V13H20V11H23ZM4 11V13H1V11H4Z"></path>
+            </svg>
+        </button>
+        <button class="switcher-item dark-btn active" onclick="changeTheme('dark')" aria-label="Dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 7C10 10.866 13.134 14 17 14C18.9584 14 20.729 13.1957 21.9995 11.8995C22 11.933 22 11.9665 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C12.0335 2 12.067 2 12.1005 2.00049C10.8043 3.27098 10 5.04157 10 7ZM4 12C4 16.4183 7.58172 20 12 20C15.0583 20 17.7158 18.2839 19.062 15.7621C18.3945 15.9187 17.7035 16 17 16C12.0294 16 8 11.9706 8 7C8 6.29648 8.08133 5.60547 8.2379 4.938C5.71611 6.28423 4 8.9417 4 12Z"></path>
+            </svg>
+        </button>
+    </div>
+
+    <footer>
+        <div class="footer-top">
+            <div class="container">
+                <div class="info">
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="#282a44ff">
+                            <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM7 13H9C9 14.6569 10.3431 16 12 16C13.6569 16 15 14.6569 15 13H17C17 15.7614 14.7614 18 12 18C9.23858 18 7 15.7614 7 13ZM8 11C7.17157 11 6.5 10.3284 6.5 9.5C6.5 8.67157 7.17157 8 8 8C8.82843 8 9.5 8.67157 9.5 9.5C9.5 10.3284 8.82843 11 8 11ZM16 11C15.1716 11 14.5 10.3284 14.5 9.5C14.5 8.67157 15.1716 8 16 8C16.8284 8 17.5 8.67157 17.5 9.5C17.5 10.3284 16.8284 11 16 11Z"></path>
+                        </svg>
+                    </div>
+                    <div class="text">
+                        <span>Takipte kalın!</span>
+                        Bizi sosyal medya'da takip edebilirsiniz.
+                    </div>
+                </div>
+                <div class="action"> 
+                    <!-- Telegram -->
+                    <a href="https://t.me/atina" rel="nofollow" data-toggle="tooltip" data-placement="top" title="Telegram" aria-label="Telegram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9.04 16.89L9.39 19.88C9.83 19.88 10.02 19.69 10.25 19.47L11.79 18.01L14.73 20.14C15.27 20.44 15.67 20.28 15.81 19.64L18.92 5.23L18.92 5.23C19.09 4.46 18.61 4.12 18.1 4.3L3.52 9.34C2.78 9.61 2.79 10.03 3.41 10.21L7.17 11.3L15.51 6.28C15.9 6.06 16.26 6.2 15.96 6.44L9.04 16.89Z"/>
+                        </svg>
+                    </a>
+
+                    <!-- Discord -->
+                    <a href="https://discord.gg/atina" rel="nofollow" data-toggle="tooltip" data-placement="top" title="Discord" aria-label="Discord">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0312-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1835 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1835 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-body">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                    </div>
+                    <div class="footer-links">
+                        <a href="{{ url_for('register') }}" title="Kayıt Ol">Kayıt Ol</a>
+                        <a href="#" title="Gizlilik ve Çerez Politikası">Gizlilik ve Çerez Politikası</a>
+                        <a href="#" title="Blog">Blog</a>
+                        <a href="#" title="API">API</a>
+                        <a href="#" title="Kullanım Şartları">Kullanım Şartları</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="container">
+                    <div class="copyright">
+                        atina.com © 2024-2025 Tüm hakları saklıdır.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const passwordInput = document.getElementById('passwordInput');
+        const icon = this;
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        }
+    });
+</script>
+
+<script>
+    (function () {
+        const form = document.getElementById('loginForm');
+        const msgBox = document.getElementById('loginError');
+        
+        // Bot tespiti için event tracking
+        let mouseEvents = 0;
+        let keyboardEvents = 0;
+        
+        document.addEventListener('mousemove', () => mouseEvents++);
+        document.addEventListener('keydown', () => keyboardEvents++);
+
+        form.addEventListener('submit', async function (ev) {
+            ev.preventDefault();
+
+            // Event sayılarını güncelle
+            document.getElementById('mouseEvents').value = mouseEvents;
+            document.getElementById('keyboardEvents').value = keyboardEvents;
+
+            msgBox.className = 'alert d-none';
+            msgBox.textContent = '';
+
+            const username = form.username.value.trim();
+            const password = form.password.value;
+
+            if (!username || !password) {
+                msgBox.textContent = 'Lütfen kullanıcı adı ve şifre giriniz.';
+                msgBox.classList.add('alert-danger');
+                msgBox.classList.remove('d-none');
+                return;
+            }
+
+            try {
+                const res = await fetch('{{ url_for("login") }}', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    body: new URLSearchParams({ username, password })
+                });
+
+                const data = await res.json().catch(() => ({}));
+
+                if (res.ok && data.ok) {
+                    msgBox.textContent = data.message || 'Giriş başarılı. Yönlendiriliyorsunuz...';
+                    msgBox.className = 'alert alert-success'; 
+                    setTimeout(() => {
+                        window.location.href = data.redirect || '{{ url_for("dashboard") }}';
+                    }, 3000);
+                } else {
+                    msgBox.textContent = (data && data.message) || 'Giriş başarısız.';
+                    msgBox.className = 'alert alert-danger'; 
+                }
+
+            } catch (err) {
+                msgBox.textContent = 'Ağ hatası. Lütfen tekrar deneyin.';
+                msgBox.className = 'alert alert-danger';
+            }
+        });
+    })();
+</script>
+
+   <script rel="preload" as="script" src="https://storage.perfectcdn.com/libs/jquery/1.12.4/jquery.min.js"></script>
+   <script rel="preload" as="script" src="https://storage.perfectcdn.com/global/fgks9m94k0nhqmix.js"></script>
+   <script rel="preload" as="script" src="https://storage.perfectcdn.com/global/8gmoznjnttfyk1mz.js"></script>
+   <script rel="preload" as="script" src="https://storage.perfectcdn.com/global/w8l498eitwhkze7w.js"></script>
+   <script rel="preload" as="script" src="https://storage.perfectcdn.com/global/2k4ql5ke4jrdfp9j.js"></script>
+   <script rel="preload" as="script" src="https://storage.perfectcdn.com/ck4qkh/hjhld6k6qhywlrsi.js"></script>
+   <script rel="preload" as="script" src="https://www.google.com/recaptcha/api.js?hl=tr"></script>
+   <script>window.modules.layouts = {"theme_id":1,"auth":0,"live":true,"csrftoken":"Y4IA8I1Es7BlBMNwYpKIgYMYs5KkGqXaFCfhOIwmxr1VtXfD-B7b4zQ08ycgofrMxFHyv5VT8K1nbLRZyHCI9g=="};</script>
+   <script>window.modules.signin = [];</script>
+<script rel="preload" src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js" as="script"></script>
+
+{% endblock %}

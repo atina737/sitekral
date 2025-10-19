@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('includes/head') %>
+</head>
+
+<body>
+    <!-- Begin page -->
+    <div class="wrapper">
+        
+        <%- include('includes/sidebar') %>
+        <%- include('includes/topbar') %>
+
+        <div class="page-content">
+            <div class="page-container">
+                
+                <div class="page-title-head d-flex align-items-center gap-2">
+                    <div class="flex-grow-1">
+                        <h4 class="fs-17 mb-0">Ad Soyad Sorgu</h4>
+                    </div>
+                    <div class="text-end">
+                        <ol class="breadcrumb m-0 py-0 fs-13">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);"><%= name %></a></li>
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Sorgular</a></li>
+                            <li class="breadcrumb-item active">Ad Soyad</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Alert Box -->
+                <div id="adsoyadAlert" class="alert alert-danger d-none" role="alert"></div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header border-bottom border-dashed d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h4 class="card-title mb-1">Kişi Sorgulama</h4>
+                                    <small class="text-muted">Ad, soyad ve konum bilgileri ile kişi arayabilirsiniz.</small>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-info-subtle text-info">
+                                        <i class="ti ti-search me-1"></i>Arama Sistemi
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <form id="searchForm">
+                                    <div class="row g-3">
+                                        <div class="col-lg-3 col-md-6">
+                                            <label for="ad" class="form-label">Ad</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="ti ti-user"></i></span>
+                                                <input type="text" id="ad" name="ad" class="form-control" placeholder="Örn: Ahmet" required>
+                                            </div>
+                                            <div class="form-text">Kişinin adını girin</div>
+                                        </div>
+                                        
+                                        <div class="col-lg-3 col-md-6">
+                                            <label for="soyad" class="form-label">Soyad</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="ti ti-user"></i></span>
+                                                <input type="text" id="soyad" name="soyad" class="form-control" placeholder="Örn: Yılmaz" required>
+                                            </div>
+                                            <div class="form-text">Kişinin soyadını girin</div>
+                                        </div>
+                                        
+                                        <div class="col-lg-3 col-md-6">
+                                            <label for="il" class="form-label">İl</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="ti ti-map-pin"></i></span>
+                                                <input type="text" id="il" name="il" class="form-control" placeholder="Örn: İstanbul">
+                                            </div>
+                                            <div class="form-text">İl bilgisi (opsiyonel)</div>
+                                        </div>
+                                        
+                                        <div class="col-lg-3 col-md-6">
+                                            <label for="ilce" class="form-label">İlçe</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="ti ti-map-pin"></i></span>
+                                                <input type="text" id="ilce" name="ilce" class="form-control" placeholder="Örn: Kadıköy">
+                                            </div>
+                                            <div class="form-text">İlçe bilgisi (opsiyonel)</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mt-4">
+                                        <div class="col-12 text-center">
+                                            <button type="submit" class="btn btn-primary btn-lg px-5" id="searchBtn">
+                                                <span class="spinner-border spinner-border-sm me-2 d-none" id="searchSpinner"></span>
+                                                <i class="ti ti-search me-2"></i>Sorgula
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sonuçlar Tablosu -->
+                <div class="row mt-4" id="resultsSection" style="display: none;">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header border-bottom border-dashed d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h4 class="card-title mb-1">Sorgu Sonuçları</h4>
+                                    <small class="text-muted" id="resultCount">Sonuçlar yükleniyor...</small>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <button class="btn btn-outline-secondary btn-sm" id="exportBtn" style="display: none;">
+                                        <i class="ti ti-download me-1"></i>Dışa Aktar
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" id="clearResultsBtn">
+                                        <i class="ti ti-x me-1"></i>Temizle
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="card-body p-0">
+                                <!-- Search Controls -->
+                                <div class="p-3 border-bottom">
+                                    <div class="d-flex justify-content-end">
+                                        <div class="border rounded d-flex flex-row align-items-center" id="top-search" style="border-color: #6c757d !important; max-width: 300px;">
+                                            <i class="ti ti-search text-muted fs-18 ps-2"></i>
+                                            <input type="search" class="form-control border-0 bg-transparent" id="tableSearch" placeholder="Kişi ara...">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0" id="resultsTable">
+                                        <thead class="bg-light-subtle">
+                                            <tr>
+                                                <th class="fs-12 text-uppercase text-muted">TC Kimlik</th>
+                                                <th class="fs-12 text-uppercase text-muted">Ad Soyad</th>
+                                                <th class="fs-12 text-uppercase text-muted">GSM</th>
+                                                <th class="fs-12 text-uppercase text-muted">Baba Adı</th>
+                                                <th class="fs-12 text-uppercase text-muted">Anne Adı</th>
+                                                <th class="fs-12 text-uppercase text-muted">Doğum Tarihi</th>
+                                                <th class="fs-12 text-uppercase text-muted">Doğum Yeri</th>
+                                                <th class="fs-12 text-uppercase text-muted">Adres</th>
+                                                <th class="fs-12 text-uppercase text-muted">Medeni Hal</th>
+                                                <th class="fs-12 text-uppercase text-muted">Cinsiyet</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="resultsBody">
+                                            <!-- Sonuçlar buraya gelecek -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <!-- Pagination -->
+                                <div class="d-flex align-items-center justify-content-between p-3 border-top" id="paginationContainer" style="display: none;">
+                                    <div class="text-muted small">
+                                        <span id="paginationInfo">0 sonuç</span>
+                                    </div>
+                                    <nav aria-label="Sayfa navigasyonu">
+                                        <ul class="pagination pagination-boxed mb-0 justify-content-center" id="pagination" style="gap: 2px;">
+                                            <!-- Pagination will be generated by JavaScript -->
+                                        </ul>
+                                    </nav>
+                                </div>
+                                
+                                <div class="text-center py-4" id="noResults" style="display: none;">
+                                    <div class="text-muted">
+                                        <i class="ti ti-search-off fs-48 mb-3 d-block"></i>
+                                        <h5>Sonuç Bulunamadı</h5>
+                                        <p class="mb-0">Arama kriterlerinize uygun kişi bulunamadı.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <%- include('includes/footer') %>
+    </div>
+
+    <!-- Vendor js -->
+    <script src="/assets/js/vendor.min.js"></script>
+    <script src="/assets/js/app.js"></script>
+
+    <script>
+    (function() {
+        const CSRF = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '<%= csrf %>';
+        const form = document.getElementById('searchForm');
+        const searchBtn = document.getElementById('searchBtn');
+        const searchSpinner = document.getElementById('searchSpinner');
+        const resultsSection = document.getElementById('resultsSection');
+        const resultsBody = document.getElementById('resultsBody');
+        const resultCount = document.getElementById('resultCount');
+        const noResults = document.getElementById('noResults');
+        const exportBtn = document.getElementById('exportBtn');
+        const clearResultsBtn = document.getElementById('clearResultsBtn');
+        const tableSearch = document.getElementById('tableSearch');
+        const paginationContainer = document.getElementById('paginationContainer');
+        const pagination = document.getElementById('pagination');
+        const paginationInfo = document.getElementById('paginationInfo');
+
+        // Pagination variables
+        const PAGE_SIZE = 20;
+        let currentPage = 1;
+        let allData = [];
+        let allRows = [];
+
+        // Custom Alert System
+        function showAlert(message, type = 'success') {
+            const alertBox = document.getElementById('adsoyadAlert');
+            if (!alertBox) return;
+            
+            alertBox.textContent = message || '';
+            alertBox.className = `alert alert-${type}`;
+            alertBox.classList.remove('d-none');
+            
+            setTimeout(() => {
+                alertBox.classList.add('d-none');
+            }, 4000);
+        }
+
+        function setLoading(loading) {
+            searchBtn.disabled = loading;
+            if (loading) {
+                searchSpinner.classList.remove('d-none');
+                searchBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Arıyor...';
+            } else {
+                searchSpinner.classList.add('d-none');
+                searchBtn.innerHTML = '<i class="ti ti-search me-2"></i>Sorgula';
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            showAlert(message, type);
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            try {
+                return new Date(dateStr).toLocaleDateString('tr-TR');
+            } catch {
+                return dateStr;
+            }
+        }
+
+        function getFiltered() {
+            const q = (tableSearch?.value || '').toLowerCase().trim();
+            if (!q) return allRows;
+            return allRows.filter(item => {
+                // Tüm data attribute'ları kontrol et
+                const name = (item.getAttribute('data-name') || '').toLowerCase();
+                const tc = (item.getAttribute('data-tc') || '').toLowerCase();
+                const gsm = (item.getAttribute('data-gsm') || '').toLowerCase();
+                const baba = (item.getAttribute('data-baba') || '').toLowerCase();
+                const anne = (item.getAttribute('data-anne') || '').toLowerCase();
+                const dogum = (item.getAttribute('data-dogum') || '').toLowerCase();
+                
+                // Ayrıca tüm text içeriğini de kontrol et
+                const allText = item.textContent.toLowerCase();
+                
+                return name.includes(q) || tc.includes(q) || gsm.includes(q) || 
+                       baba.includes(q) || anne.includes(q) || dogum.includes(q) ||
+                       allText.includes(q);
+            });
+        }
+
+        function syncPagination(total) {
+            if (!pagination) return;
+            const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+            pagination.innerHTML = '';
+            
+            // prev
+            const prevLi = document.createElement('li');
+            prevLi.className = 'page-item' + (currentPage === 1 ? ' disabled' : '');
+            prevLi.innerHTML = `<a href="#" class="page-link border-0 ${currentPage === 1 ? 'bg-secondary text-muted' : 'bg-primary text-white'}" data-page="prev" style="border-radius: 8px; margin: 0 2px; padding: 0.4rem 0.6rem; font-size: 0.8rem;"><i class="ti ti-chevron-left"></i></a>`;
+            pagination.appendChild(prevLi);
+            
+            // Her zaman 4 sayfa göster - seçilen sayfa sol tarafta kalır
+            let startPage = currentPage;
+            let endPage = Math.min(totalPages, currentPage + 3);
+            
+            // Eğer 4 sayfa gösteremiyorsak, baştan başla
+            if (endPage - startPage < 3) {
+                startPage = Math.max(1, endPage - 3);
+            }
+            
+            // Sayfa numaraları (her zaman 4 sayfa)
+            for (let p = startPage; p <= endPage; p++) {
+                const li = document.createElement('li');
+                li.className = 'page-item' + (p === currentPage ? ' active' : '');
+                li.innerHTML = `<a href="#" class="page-link border-0 ${p === currentPage ? 'bg-primary text-white' : 'bg-transparent text-white border-secondary'}" data-page="${p}" style="border-radius: 8px; margin: 0 2px; padding: 0.4rem 0.6rem; font-size: 0.8rem; min-width: 35px;">${p}</a>`;
+                pagination.appendChild(li);
+            }
+            
+            // next
+            const nextLi = document.createElement('li');
+            nextLi.className = 'page-item' + (currentPage === totalPages ? ' disabled' : '');
+            nextLi.innerHTML = `<a href="#" class="page-link border-0 ${currentPage === totalPages ? 'bg-secondary text-muted' : 'bg-primary text-white'}" data-page="next" style="border-radius: 8px; margin: 0 2px; padding: 0.4rem 0.6rem; font-size: 0.8rem;"><i class="ti ti-chevron-right"></i></a>`;
+            pagination.appendChild(nextLi);
+        }
+
+        function render() {
+            const rows = getFiltered();
+            const total = rows.length;
+            const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+            if (currentPage > totalPages) currentPage = totalPages;
+            const start = (currentPage - 1) * PAGE_SIZE;
+            const end = start + PAGE_SIZE;
+            
+            // hide/show
+            allRows.forEach(item => item.style.display = 'none');
+            rows.slice(start, end).forEach(item => item.style.display = 'table-row');
+            
+            // counter text
+            if (paginationInfo) paginationInfo.textContent = total + ' sonuç';
+            
+            // pagination
+            if (total > PAGE_SIZE) {
+                paginationContainer.style.display = 'flex';
+                syncPagination(total);
+            } else {
+                paginationContainer.style.display = 'none';
+            }
+            
+            // show/hide no results
+            if (total === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        }
+
+        function renderResults(data) {
+            if (!data || data.length === 0) {
+                resultsBody.innerHTML = '';
+                allRows = [];
+                noResults.style.display = 'block';
+                resultCount.textContent = '0 sonuç bulundu';
+                exportBtn.style.display = 'none';
+                paginationContainer.style.display = 'none';
+                return;
+            }
+
+            allData = [...data];
+            currentPage = 1;
+
+            noResults.style.display = 'none';
+            resultCount.textContent = `${data.length} sonuç bulundu`;
+            exportBtn.style.display = 'inline-block';
+
+            resultsBody.innerHTML = data.map(person => `
+                <tr data-name="${(person.AD || '') + ' ' + (person.SOYAD || '')}"
+                    data-tc="${person.TC || ''}"
+                    data-gsm="${person.GSM || ''}"
+                    data-baba="${person.BABAADI || ''}"
+                    data-anne="${person.ANNEADI || ''}"
+                    data-dogum="${person.DOGUMYERI || ''}">
+                    <td>
+                        <span class="badge bg-primary-subtle text-primary">
+                            <i class="ti ti-id me-1"></i>${person.TC || '-'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-md flex-shrink-0 me-2">
+                                <span class="avatar-title bg-info-subtle rounded-circle text-info fw-semibold" style="width:35px; height:35px; display:flex; align-items:center; justify-content:center;">
+                                    ${(person.AD || '?')[0].toUpperCase()}
+                                </span>
+                            </div>
+                            <div>
+                                <div class="fw-semibold">${person.AD || ''} ${person.SOYAD || ''}</div>
+                                <small class="text-muted">${person.DOGUMYERI || ''}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge bg-success-subtle text-success">
+                            <i class="ti ti-phone me-1"></i>${person.GSM || 'Yok'}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="text-muted">${person.BABAADI || '-'}</span>
+                    </td>
+                    <td>
+                        <span class="text-muted">${person.ANNEADI || '-'}</span>
+                    </td>
+                    <td>
+                        <span class="badge bg-warning-subtle text-warning">
+                            <i class="ti ti-calendar me-1"></i>${formatDate(person.DOGUMTARIHI)}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="text-muted">${person.DOGUMYERI || '-'}</span>
+                    </td>
+                    <td>
+                        <div class="text-muted" style="max-width: 200px;">
+                            <small>${person.ADRESIL || ''} ${person.ADRESILCE || ''}</small>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge bg-secondary-subtle text-secondary">
+                            ${person.MEDENIHAL || '-'}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge ${person.CINSIYET === 'E' ? 'bg-primary-subtle text-primary' : 'bg-pink-subtle text-pink'}">
+                            <i class="ti ti-${person.CINSIYET === 'E' ? 'gender-male' : 'gender-female'} me-1"></i>
+                            ${person.CINSIYET === 'E' ? 'Erkek' : 'Kadın'}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Update allRows array
+            allRows = Array.from(resultsBody.querySelectorAll('tr'));
+            
+            // Initial render
+            render();
+        }
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const ad = document.getElementById('ad').value.trim();
+            const soyad = document.getElementById('soyad').value.trim();
+            const il = document.getElementById('il').value.trim();
+            
+            if (!ad || !soyad) {
+                showToast('Ad ve soyad alanları zorunludur!', 'warning');
+                return;
+            }
+
+            setLoading(true);
+            resultsSection.style.display = 'block';
+
+            try {
+                const response = await fetch('/api/adsoyad', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-csrf-token': CSRF
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ ad, soyad, il })
+                });
+
+                const result = await response.json();
+                
+                if (result.ok && result.data) {
+                    renderResults(result.data);
+                    showToast(`${result.data.length} sonuç bulundu`, 'success');
+                } else {
+                    renderResults([]);
+                    showToast(result.message || 'Arama sırasında bir hata oluştu', 'error');
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                renderResults([]);
+                showToast('Bağlantı hatası oluştu', 'error');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        clearResultsBtn.addEventListener('click', function() {
+            resultsSection.style.display = 'none';
+            resultsBody.innerHTML = '';
+            noResults.style.display = 'none';
+            allRows = [];
+            allData = [];
+            currentPage = 1;
+            paginationContainer.style.display = 'none';
+            form.reset();
+        });
+
+        // Pagination event listener
+        pagination?.addEventListener('click', function(e) {
+            const a = e.target.closest('a.page-link');
+            if (!a) return;
+            e.preventDefault();
+            const target = a.getAttribute('data-page');
+            const rows = getFiltered();
+            const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+            if (target === 'prev' && currentPage > 1) currentPage--;
+            else if (target === 'next' && currentPage < totalPages) currentPage++;
+            else if (!isNaN(Number(target))) currentPage = Number(target);
+            render();
+        });
+
+        // Search functionality
+        tableSearch?.addEventListener('input', function() { 
+            currentPage = 1; 
+            render(); 
+        });
+
+        exportBtn.addEventListener('click', function() {
+            const table = document.getElementById('resultsTable');
+            const rows = Array.from(table.querySelectorAll('tbody tr'));
+            
+            if (rows.length === 0) {
+                showToast('Dışa aktarılacak veri yok', 'warning');
+                return;
+            }
+
+            // Basit CSV export
+            let csv = 'TC,Ad Soyad,GSM,Baba Adı,Anne Adı,Doğum Tarihi,Doğum Yeri,Adres,Medeni Hal,Cinsiyet\n';
+            
+            rows.forEach(row => {
+                const cells = Array.from(row.querySelectorAll('td'));
+                const rowData = cells.map(cell => {
+                    const text = cell.textContent.trim();
+                    return `"${text.replace(/"/g, '""')}"`;
+                });
+                csv += rowData.join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `adsoyad-sonuclari-${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast('Veriler dışa aktarıldı', 'success');
+        });
+    })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('includes/head') %>
+</head>
+
+<body>
+    <!-- Begin page -->
+    <div class="wrapper">
+        
+        <%- include('includes/sidebar') %>
+        <%- include('includes/topbar') %>
+
+        <div class="page-content">
+            <div class="page-container">
+                
+                <div class="page-title-head d-flex align-items-center gap-2">
+                    <div class="flex-grow-1">
+                        <h4 class="fs-17 mb-0">Aile Ağacı Sorgu</h4>
+                    </div>
+                    <div class="text-end">
+                        <ol class="breadcrumb m-0 py-0 fs-13">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);"><%= name %></a></li>
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Sorgular</a></li>
+                            <li class="breadcrumb-item active">Aile Ağacı</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Alert Box -->
+                <div id="aileproAlert" class="alert alert-danger d-none" role="alert"></div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header border-bottom border-dashed d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h4 class="card-title mb-1">Aile Ağacı Sorgulama</h4>
+                                    <small class="text-muted">TC kimlik numarası ile aile bilgilerini sorgulayabilirsiniz.</small>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-warning-subtle text-warning">
+                                        <i class="ti ti-users me-1"></i>Aile Ağacı
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <form id="searchForm">
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <label for="tc" class="form-label">TC Kimlik Numarası <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="ti ti-id"></i></span>
+                                                <input type="text" id="tc" name="tc" class="form-control" placeholder="Örn: 11111111110" maxlength="11" required>
+                                            </div>
+                                            <div class="form-text">11 haneli TC kimlik numarasını girin</div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-12 text-center">
+                                            <button type="submit" class="btn btn-warning px-4 py-2">
+                                                <i class="ti ti-search me-2"></i>Sorgula
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="row mt-4" id="resultsSection" style="display: none;">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header border-bottom border-dashed d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h4 class="card-title mb-1">Aile Bilgileri</h4>
+                                    <small class="text-muted" id="resultCount">Sonuçlar yükleniyor...</small>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <button class="btn btn-outline-success btn-sm" id="exportBtn" style="display: none;">
+                                        <i class="ti ti-download me-1"></i>Dışa Aktar
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" id="backToFormBtn">
+                                        <i class="ti ti-arrow-left me-1"></i>Geri
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="resultsBody">
+                                    <!-- Sonuçlar buraya gelecek -->
+                                </div>
+                                <div class="text-center py-5" id="noResults" style="display: none;">
+                                    <div class="bg-light rounded-4 p-5">
+                                        <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                                            <i class="ti ti-users-off fs-1 text-warning"></i>
+                                        </div>
+                                        <h5 class="fw-bold text-dark mb-2">Sonuç Bulunamadı</h5>
+                                        <p class="text-muted mb-0">Bu TC kimlik numarası için aile bilgisi bulunamadı.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <%- include('includes/footer') %>
+    </div>
+
+    <!-- Vendor js -->
+    <script src="/assets/js/vendor.min.js"></script>
+    <script src="/assets/js/app.js"></script>
+
+    <script>
+        // Global variables
+        window.csrfToken = '<%= csrf %>';
+        window.userEmail = '<%= user?.email %>';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.getElementById('searchForm');
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsBody = document.getElementById('resultsBody');
+            const noResults = document.getElementById('noResults');
+            const resultCount = document.getElementById('resultCount');
+            const backToFormBtn = document.getElementById('backToFormBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            const alertBox = document.getElementById('aileproAlert');
+
+            // Form submission
+            searchForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const tc = document.getElementById('tc').value.trim();
+                
+                if (!tc || tc.length !== 11) {
+                    showAlert('Lütfen geçerli bir TC kimlik numarası girin.', 'danger');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/ailepro', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-Token': window.csrfToken
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify({ tc })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.ok) {
+                        if (data.data && data.data.veri) {
+                            renderResults(data.data);
+                            resultsSection.style.display = 'block';
+                            searchForm.style.display = 'none';
+                        } else {
+                            showNoResults();
+                        }
+                    } else {
+                        showAlert(data.message || 'Sorgu başarısız.', 'danger');
+                    }
+                } catch (error) {
+                    showAlert('Bir hata oluştu. Lütfen tekrar deneyin.', 'danger');
+                }
+            });
+
+            // Back to form
+            backToFormBtn.addEventListener('click', function() {
+                resultsSection.style.display = 'none';
+                searchForm.style.display = 'block';
+                document.getElementById('tc').value = '';
+            });
+
+            function renderResults(data) {
+                if (!data || !data.veri) {
+                    resultsBody.innerHTML = '';
+                    if (noResults) noResults.style.display = 'block';
+                    if (resultCount) resultCount.textContent = '0 sonuç';
+                    return;
+                }
+
+                if (noResults) noResults.style.display = 'none';
+                if (resultCount) resultCount.textContent = 'Aile bilgileri bulundu';
+
+                const person = data.veri;
+                const aile = data.aile || [];
+                const cocuklar = data.cocuklar || [];
+                const esler = data.esler || [];
+
+                resultsBody.innerHTML = `
+                    <div class="result-item mb-3 p-3 rounded-3 border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px);">
+                        <h6 class="text-white fw-bold mb-3">Ana Kişi</h6>
+                        <div class="row g-1">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center py-2 px-3 rounded-2" style="background: rgba(255,255,255,0.05);">
+                                    <span class="text-muted fw-semibold">Ad Soyad:</span>
+                                    <span class="text-white fw-bold">${person.AD || ''} ${person.SOYAD || ''}</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center py-2 px-3 rounded-2" style="background: rgba(255,255,255,0.03);">
+                                    <span class="text-muted fw-semibold">TC:</span>
+                                    <span class="text-white fw-bold">${person.TC || '-'}</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center py-2 px-3 rounded-2" style="background: rgba(255,255,255,0.03);">
+                                    <span class="text-muted fw-semibold">GSM:</span>
+                                    <span class="text-white fw-bold">${person.GSM || '-'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${aile.length > 0 ? `
+                    <div class="result-item mb-3 p-3 rounded-3 border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px);">
+                        <h6 class="text-white fw-bold mb-3">Aile Üyeleri (${aile.length})</h6>
+                        ${aile.map((member, index) => `
+                            <div class="mb-2 p-2 rounded" style="background: rgba(255,255,255,0.05);">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-white">${member.AD || ''} ${member.SOYAD || ''} (<span class="text-muted">${member.TC || ''}</span>)</span>
+                                    <span class="text-muted">${member.CINSIYET || ''}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ` : ''}
+                    
+                    ${cocuklar.length > 0 ? `
+                    <div class="result-item mb-3 p-3 rounded-3 border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px);">
+                        <h6 class="text-white fw-bold mb-3">Çocuklar (${cocuklar.length})</h6>
+                        ${cocuklar.map((child, index) => `
+                            <div class="mb-2 p-2 rounded" style="background: rgba(255,255,255,0.05);">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-white">${child.AD || ''} ${child.SOYAD || ''} (<span class="text-muted">${child.TC || ''}</span>)</span>
+                                    <span class="text-muted">${child.CINSIYET || ''}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ` : ''}
+                    
+                    ${esler.length > 0 ? `
+                    <div class="result-item mb-3 p-3 rounded-3 border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px);">
+                        <h6 class="text-white fw-bold mb-3">Eşler (${esler.length})</h6>
+                        ${esler.map((spouse, index) => `
+                            <div class="mb-2 p-2 rounded" style="background: rgba(255,255,255,0.05);">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-white">${spouse.AD || ''} ${spouse.SOYAD || ''} (<span class="text-muted">${spouse.TC || ''}</span>)</span>
+                                    <span class="text-muted">${spouse.CINSIYET || ''}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ` : ''}
+                `;
+            }
+
+            function showNoResults() {
+                noResults.style.display = 'block';
+                resultsSection.style.display = 'block';
+                searchForm.style.display = 'none';
+            }
+
+            function showAlert(message, type) {
+                alertBox.textContent = message;
+                alertBox.className = `alert alert-${type}`;
+                alertBox.classList.remove('d-none');
+                setTimeout(() => {
+                    alertBox.classList.add('d-none');
+                }, 5000);
+            }
+        });
+    </script>
+
+</body>
+
+</html>

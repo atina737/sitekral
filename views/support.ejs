@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <%- include('includes/head') %>
+</head>
+
+<body>
+  <div class="wrapper">
+
+    <%- include('includes/sidebar') %>
+    <%- include('includes/topbar') %>
+
+    <div class="page-content">
+      <div class="page-container">
+
+        <div class="page-title-head d-flex align-items-center gap-2">
+          <div class="flex-grow-1">
+            <h4 class="fs-17 mb-0">Destek Talepleri</h4>
+          </div>
+          <div class="text-end">
+            <ol class="breadcrumb m-0 py-0 fs-13">
+              <li class="breadcrumb-item"><a href="#">ana sayfa</a></li>
+              <li class="breadcrumb-item active">destek</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Yeni Destek Talebi Oluştur -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title mb-0">Yeni Destek Talebi Oluştur</h4>
+              </div>
+              <div class="card-body">
+                <form id="newTicketForm">
+                  <div id="ticketAlert" class="alert alert-danger d-none" role="alert"></div>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for="ticketCategory" class="form-label">Kategori</label>
+                      <select class="form-select" id="ticketCategory">
+                        <option value="Genel" selected>Genel</option>
+                        <option value="Teknik">Teknik Destek</option>
+                        <option value="Ödeme">Ödeme Sorunu</option>
+                        <option value="Hesap">Hesap Sorunu</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="ticketPriority" class="form-label">Öncelik</label>
+                      <select class="form-select" id="ticketPriority">
+                        <option value="Normal" selected>Normal</option>
+                        <option value="Düşük">Düşük</option>
+                        <option value="Yüksek">Yüksek</option>
+                        <option value="Acil">Acil</option>
+                      </select>
+                    </div>
+                    <div class="col-12">
+                      <label for="ticketSubject" class="form-label">Konu</label>
+                      <input type="text" id="ticketSubject" class="form-control" placeholder="Konu giriniz" required />
+                    </div>
+                    <div class="col-12">
+                      <label for="ticketMessage" class="form-label">Mesaj</label>
+                      <textarea id="ticketMessage" class="form-control" rows="5" placeholder="Mesajınızı buraya yazınız..." required></textarea>
+                    </div>
+                    <div class="col-12 text-end">
+                      <button type="submit" class="btn btn-primary">
+                        <i class="ti ti-send me-2"></i>Talep Oluştur
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Taleplerim -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Taleplerim</h5>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Konu</th>
+                        <th>Kategori</th>
+                        <th>Öncelik</th>
+                        <th>Durum</th>
+                        <th>Tarih</th>
+                        <th>Cevaplar</th>
+                        <th>İşlemler</th>
+                      </tr>
+                    </thead>
+                    <tbody id="myTicketsTable">
+                      <tr>
+                        <td colspan="8" class="text-center py-4">
+                          <div class="text-muted">
+                            <i class="ti ti-clipboard-list fs-1 mb-3 d-block"></i>
+                            <h5>Henüz destek talebiniz bulunmuyor</h5>
+                            <p>Yukarıdaki formu kullanarak yeni bir talep oluşturabilirsiniz.</p>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Talep Detay Modal -->
+        <div class="modal fade" id="ticketDetailModal" tabindex="-1" aria-labelledby="ticketDetailModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="ticketDetailModalLabel">Talep Detayları</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+              </div>
+              <div class="modal-body">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <strong>Talep ID:</strong> <span id="ticketIdDetail">-</span>
+                  </div>
+                  <div class="col-md-6">
+                    <strong>Durum:</strong> <span id="ticketStatusDetail">-</span>
+                  </div>
+                  <div class="col-md-6">
+                    <strong>Kategori:</strong> <span id="ticketCategoryDetail">-</span>
+                  </div>
+                  <div class="col-md-6">
+                    <strong>Öncelik:</strong> <span id="ticketPriorityDetail">-</span>
+                  </div>
+                  <div class="col-12">
+                    <strong>Konu:</strong> <span id="ticketSubjectDetail">-</span>
+                  </div>
+                  <div class="col-12">
+                    <strong>Mesaj:</strong>
+                    <div class="border p-3 mt-2" id="ticketMessageDetail">-</div>
+                  </div>
+                  <div class="col-12">
+                    <strong>Cevaplar:</strong>
+                    <div id="ticketReplies" class="mt-2">
+                      <p class="text-muted">Henüz cevap yok.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  <%- include('includes/footer') %>
+  </div>
+
+  <!-- Vendor js -->
+  <script src="/assets/js/vendor.min.js"></script>
+
+  <!-- App js -->
+  <script src="/assets/js/app.js"></script>
+
+  <script>
+    (function() {
+      const q = s => document.querySelector(s);
+      let myTickets = [];
+
+      function toast(msg, type) {
+        let box = document.getElementById('toastContainer');
+        if (!box) {
+          box = document.createElement('div');
+          box.id = 'toastContainer';
+          box.className = 'toast-container position-fixed top-0 end-0 p-3';
+          box.style.zIndex = '1080';
+          document.body.appendChild(box);
+        }
+        const id = 't' + Math.random().toString(36).slice(2);
+        let cls = 'bg-danger text-white';
+        if (type === 'success') cls = 'bg-success text-white';
+        else if (type === 'info') cls = 'bg-info text-dark';
+        else if (type === 'warning') cls = 'bg-warning text-dark';
+        box.insertAdjacentHTML('beforeend',
+          `<div id="${id}" class="toast align-items-center ${cls} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="d-flex">
+            <div class="toast-body">${msg || ''}</div>
+            <button type="button" class="btn-close${cls.includes('text-white') ? ' btn-close-white' : ''} me-2 m-auto" data-bs-dismiss="toast" aria-label="Kapat"></button>
+          </div>
+        </div>`
+        );
+        const el = document.getElementById(id);
+        const t = new bootstrap.Toast(el, { delay: 2200 });
+        el.addEventListener('hidden.bs.toast', function() { el.remove(); });
+        t.show();
+      }
+
+      function getStatusBadge(status) {
+        const statusMap = {
+          'open': { text: 'Açık', class: 'bg-success' },
+          'answered': { text: 'Yanıtlandı', class: 'bg-primary' },
+          'in-progress': { text: 'İşlemde', class: 'bg-warning' },
+          'closed': { text: 'Kapalı', class: 'bg-secondary' }
+        };
+        return statusMap[status] || statusMap['open'];
+      }
+
+      function getPriorityBadge(priority) {
+        const priorityMap = {
+          'Düşük': { class: 'bg-secondary' },
+          'Normal': { class: 'bg-info' },
+          'Yüksek': { class: 'bg-warning' },
+          'Acil': { class: 'bg-danger' }
+        };
+        return priorityMap[priority] || priorityMap['Normal'];
+      }
+
+      function formatDate(dateStr) {
+        return new Date(dateStr).toLocaleString('tr-TR');
+      }
+
+      function renderMyTickets() {
+        const tbody = q('#myTicketsTable');
+        if (!tbody) return;
+
+        if (!myTickets.length) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="8" class="text-center py-4">
+                <div class="text-muted">
+                  <i class="ti ti-clipboard-list fs-1 mb-3 d-block"></i>
+                  <h5>Henüz destek talebiniz bulunmuyor</h5>
+                  <p>Yukarıdaki formu kullanarak yeni bir talep oluşturabilirsiniz.</p>
+                </div>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = myTickets.map(ticket => {
+          const statusInfo = getStatusBadge(ticket.status);
+          const priorityInfo = getPriorityBadge(ticket.priority);
+          const replyCount = ticket.replies ? ticket.replies.length : 0;
+
+          return `
+            <tr>
+              <td><code>${ticket.id}</code></td>
+              <td>${ticket.subject}</td>
+              <td>${ticket.category}</td>
+              <td><span class="badge ${priorityInfo.class}">${ticket.priority}</span></td>
+              <td><span class="badge ${statusInfo.class}">${statusInfo.text}</span></td>
+              <td>${formatDate(ticket.createdAt)}</td>
+              <td>${replyCount} cevap</td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary" onclick="viewTicket('${ticket.id}')" title="Görüntüle">
+                  <i class="ti ti-eye"></i>
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      function loadMyTickets() {
+        // API'den kullanıcının taleplerini yükle
+        fetch('/api/support/my-tickets')
+          .then(response => response.json())
+          .then(data => {
+            if (data.ok) {
+              myTickets = data.tickets || [];
+              renderMyTickets();
+            }
+          })
+          .catch(error => {
+            console.error('Talepler yüklenemedi:', error);
+            myTickets = [];
+            renderMyTickets();
+          });
+      }
+
+      // Global functions
+      window.viewTicket = function(ticketId) {
+        const ticket = myTickets.find(t => t.id === ticketId);
+        if (!ticket) return;
+
+        q('#ticketIdDetail').textContent = ticket.id;
+        q('#ticketStatusDetail').textContent = getStatusBadge(ticket.status).text;
+        q('#ticketCategoryDetail').textContent = ticket.category;
+        q('#ticketPriorityDetail').textContent = ticket.priority;
+        q('#ticketSubjectDetail').textContent = ticket.subject;
+        q('#ticketMessageDetail').textContent = ticket.message;
+
+        // Cevapları yükle
+        const repliesEl = q('#ticketReplies');
+        if (ticket.replies && ticket.replies.length > 0) {
+          repliesEl.innerHTML = ticket.replies.map(reply => `
+            <div class="border p-3 mb-2">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <strong>${reply.user}</strong>
+                <small class="text-muted">${formatDate(reply.createdAt)}</small>
+              </div>
+              <p class="mb-0">${reply.message}</p>
+            </div>
+          `).join('');
+        } else {
+          repliesEl.innerHTML = '<p class="text-muted">Henüz cevap yok.</p>';
+        }
+
+        const modal = new bootstrap.Modal(q('#ticketDetailModal'));
+        modal.show();
+      };
+
+      // Event listeners
+      q('#newTicketForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const subject = q('#ticketSubject').value.trim();
+        const message = q('#ticketMessage').value.trim();
+        const category = q('#ticketCategory').value;
+        const priority = q('#ticketPriority').value;
+        const alertBox = q('#ticketAlert');
+
+        if (!subject || !message) {
+          if (alertBox) {
+            alertBox.textContent = 'Konu ve mesaj alanları zorunludur';
+            alertBox.classList.remove('d-none');
+          }
+          return;
+        }
+
+        // API'ye talep gönder
+        fetch('/api/support/create-ticket', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            subject,
+            message,
+            category,
+            priority
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.ok) {
+            if (alertBox) {
+              alertBox.textContent = 'Talep başarıyla oluşturuldu';
+              alertBox.className = 'alert alert-success';
+              alertBox.classList.remove('d-none');
+            }
+            q('#newTicketForm').reset();
+            loadMyTickets(); // Listeyi yenile
+          } else {
+            if (alertBox) {
+              alertBox.textContent = data.message || 'Talep oluşturulamadı';
+              alertBox.className = 'alert alert-danger';
+              alertBox.classList.remove('d-none');
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Talep oluşturma hatası:', error);
+          if (alertBox) {
+            alertBox.textContent = 'Bir hata oluştu';
+            alertBox.className = 'alert alert-danger';
+            alertBox.classList.remove('d-none');
+          }
+        });
+      });
+
+      // Initialize
+      if (document.readyState === 'loading')
+        document.addEventListener('DOMContentLoaded', loadMyTickets);
+      else
+        loadMyTickets();
+    })();
+  </script>
+
+</body>
+
+</html>

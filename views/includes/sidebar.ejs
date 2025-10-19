@@ -1,0 +1,336 @@
+<!-- Sidenav Menu Start -->
+        <div class="sidenav-menu">
+
+            <!-- Brand Logo -->
+            <a href="index.html" class="logo">
+                <span class="logo-light">
+<span class="logo-lg"><%= siteName || 'Site' %></span>
+<style>
+    .logo-lg {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #6c757d; /* Bootstrap'in text-secondary gri rengi */
+}
+
+</style>
+
+                    <span class="logo-sm" alt="small logo"><%= (siteName && siteName[0]) || 'S' %></span>
+                </span>
+
+                <style>
+    .logo-sm {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #6c757d; /* Bootstrap'in text-secondary gri rengi */
+}
+
+</style>
+
+                <span class="logo-dark">
+                    <span class="logo-lg"><img src="/assets/images/logo-dark.png" alt="dark logo"></span>
+                    <span class="logo-sm"><img src="/assets/images/logo-sm.png" alt="small logo"></span>
+                </span>
+            </a>
+
+            <!-- Sidebar Hover Menu Toggle Button -->
+           <!-- head kısmına: Tabler webfont CSS -->
+
+
+<!-- buton ile ikon -->
+<button class="button-sm-hover">
+  <i class="ti ti-circle align-middle" style="font-size: 24px; color: #007bff;"></i>
+</button>
+            <!-- Full Sidebar Menu Close Button -->
+            <button class="button-close-fullsidebar">
+                <i class="ti ti-x align-middle"></i>
+            </button>
+
+            <div data-simplebar>
+ 
+ <!--- Sidenav Menu -->
+               <% if (isAdmin) { %>
+<ul class="side-nav">
+    <li class="side-nav-title">Admin Paneli</li>
+
+    <li class="side-nav-item">
+        <a data-bs-toggle="collapse" href="#sidebarUserAdd" aria-expanded="false" aria-controls="sidebarUserAdd" class="side-nav-link">
+            <span class="menu-icon"><i class="ti ti-users-plus"></i></span>
+            <span class="menu-text"> Kullanıcı Yönetimi </span>
+            <span class="badge bg-success rounded-pill"></span>
+            <span class="menu-arrow"></span>
+        </a>
+        <div class="collapse" id="sidebarUserAdd">
+            <ul class="sub-menu">
+                <li class="side-nav-item">
+                    <a href="/kullanicilar" class="side-nav-link">
+                        <span class="menu-text">Kullanıcılar</span>
+                    </a>
+                </li>
+                <li class="side-nav-item">
+                    <a href="/kullanicionay" class="side-nav-link">
+                        <span class="menu-text">Kullanıcı Onayı</span>
+                    </a>
+                </li>
+                <li class="side-nav-item">
+                    <a href="/logs" class="side-nav-link">
+                        <span class="menu-text">Sorgu Logları</span>
+                    </a>
+                </li>
+                <li class="side-nav-item">
+                    <a href="/supportadmin" class="side-nav-link">
+                        <span class="menu-text">Destek Yönetimi</span>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </li>
+
+    <li class="side-nav-item">
+        <a data-bs-toggle="collapse" href="#sidebarSiteAdmin" aria-expanded="false" aria-controls="sidebarSiteAdmin" class="side-nav-link">
+            <span class="menu-icon"><i class="ti ti-settings"></i></span>
+            <span class="menu-text"> Site Yönetimi </span>
+            <span class="badge bg-success rounded-pill"></span>
+            <span class="menu-arrow"></span>
+        </a>
+        <div class="collapse" id="sidebarSiteAdmin">
+            <ul class="sub-menu">
+                <li class="side-nav-item">
+                    <a href="/siteayar" class="side-nav-link">
+                        <span class="menu-text">Genel Ayarlar</span>
+                    </a>
+                </li>
+                <li class="side-nav-item">
+                    <a href="/security" class="side-nav-link">
+                        <i class="ti ti-shield-check me-2"></i>
+                        <span class="menu-text">Güvenlik Dashboard</span>
+                    </a>
+                </li>
+                 <li class="side-nav-item">
+                     <a href="/duyurular" class="side-nav-link">
+                         <span class="menu-text">Duyuru Yönetimi</span>
+                     </a>
+                 </li>
+            </ul>
+        </div>
+    </li>
+</ul>
+<% } %>
+
+                <ul class="side-nav">
+    <li class="side-nav-title">Atina</li>
+
+    <li class="side-nav-item">
+        <a href="/dashboard" class="side-nav-link">
+            <span class="menu-icon"><i class="ti ti-dashboard"></i></span>
+            <span class="menu-text"> Ana Sayfa </span>
+        </a>
+    </li>
+
+    <li class="side-nav-item">
+        <a href="/support" class="side-nav-link">
+            <span class="menu-icon"><i class="ti ti-headset"></i></span>
+            <span class="menu-text"> Destek Talebi </span>
+        </a>
+    </li>
+
+    <li class="side-nav-item">
+        <a href="/market" class="side-nav-link">
+            <span class="menu-icon"><i class="ti ti-shopping-cart"></i></span>
+            <span class="menu-text"> Market </span>
+        </a>
+    </li>
+
+    
+    <li class="side-nav-item">
+        <a href="/sorgular" class="side-nav-link">
+            <span class="menu-icon"><i class="ti ti-users"></i></span>
+            <span class="menu-text"> Sorgular V2 </span>
+        </a>
+    </li>
+
+    <li class="side-nav-item">
+        <a data-bs-toggle="collapse" href="#sidebarMaps" aria-expanded="false" aria-controls="sidebarMaps" class="side-nav-link">
+            <span class="menu-icon"><i class="ti ti-search"></i></span>
+            <span class="menu-text"> Sorgular </span>
+            <span class="menu-arrow"></span>
+        </a>
+        <div class="collapse" id="sidebarMaps">
+            <ul class="sub-menu">
+                <li class="side-nav-item">
+                    <a href="/adsoyad" class="side-nav-link">
+                        <span class="menu-text">Ad Soyad Sorgu</span>
+                    </a>
+                </li>
+                 <li class="side-nav-item">
+                     <a href="/tcsorgu" class="side-nav-link">
+                         <span class="menu-text">TC Sorgu</span>
+                     </a>
+                 </li>
+                 <li class="side-nav-item">
+                     <a href="/adres" class="side-nav-link">
+                         <span class="menu-text">Adres Sorgu</span>
+                     </a>
+                 </li>
+                <li class="side-nav-item">
+                    <a href="/ailepro" class="side-nav-link">
+                        <span class="menu-text">Aile Sorgu</span>
+                    </a>
+                </li>
+                 <li class="side-nav-item">
+                     <a href="/sulale" class="side-nav-link">
+                         <span class="menu-text">Sülale Sorgu</span>
+                     </a>
+                 </li>
+                 <li class="side-nav-item">
+                     <a href="/tcgsm" class="side-nav-link">
+                         <span class="menu-text">TC > GSM Sorgu</span>
+                     </a>
+                 </li>
+                 <li class="side-nav-item">
+                     <a href="/gsmtc" class="side-nav-link">
+                         <span class="menu-text">GSM > TC Sorgu</span>
+                     </a>
+                 </li>
+                 <li class="side-nav-item">
+                     <a href="/tapu" class="side-nav-link">
+                         <span class="menu-text">Tapu Sorgu</span>
+                     </a>
+                 </li>
+
+                 <li class="side-nav-item">
+                     <a href="/isyeri" class="side-nav-link">
+                         <span class="menu-text">İş Yeri Sorgu</span>
+                     </a>
+                 </li>
+            </ul>
+        </div>
+    </li>
+</ul>
+                <!-- Help Box -->
+               
+
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <!-- Sidenav Menu End -->
+
+        <!-- Logout Button -->
+    
+
+        <script>
+        function logout() {
+            // SweetAlert2 ile onay al
+            Swal.fire({
+                title: 'Çıkış Yapmak İstediğinizden Emin misiniz?',
+                text: "Hesabınızdan güvenli bir şekilde çıkış yapacaksınız.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Evet, Çıkış Yap',
+                cancelButtonText: 'İptal',
+                customClass: {
+                    popup: 'swal2-popup-custom',
+                    confirmButton: 'swal2-confirm-custom',
+                    cancelButton: 'swal2-cancel-custom'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Loading göster
+                    Swal.fire({
+                        title: 'Çıkış yapılıyor...',
+                        text: 'Lütfen bekleyiniz.',
+                        icon: 'info',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Logout işlemi
+                    fetch('/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-Token': window.csrfToken || ''
+                        },
+                        credentials: 'same-origin'
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // Başarılı çıkış
+                            Swal.fire({
+                                title: 'Başarılı!',
+                                text: 'Güvenli bir şekilde çıkış yaptınız.',
+                                icon: 'success',
+                                confirmButtonText: 'Tamam',
+                                customClass: {
+                                    popup: 'swal2-popup-custom'
+                                }
+                            }).then(() => {
+                                // Ana sayfaya yönlendir
+                                window.location.href = '/login';
+                            });
+                        } else {
+                            throw new Error('Çıkış işlemi başarısız');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Logout error:', error);
+                        Swal.fire({
+                            title: 'Hata!',
+                            text: 'Çıkış işlemi sırasında bir hata oluştu.',
+                            icon: 'error',
+                            confirmButtonText: 'Tamam',
+                            customClass: {
+                                popup: 'swal2-popup-custom'
+                            }
+                        });
+                    });
+                }
+            });
+        }
+        </script>
+
+        <style>
+        .swal2-popup-custom {
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+        }
+        
+        .swal2-confirm-custom {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 10px 20px;
+        }
+        
+        .swal2-cancel-custom {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 10px 20px;
+        }
+        
+        .swal2-confirm-custom:hover {
+            background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+        
+        .swal2-cancel-custom:hover {
+            background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+        }
+        </style>
+        </div>
+        <!-- Sidenav Menu End -->

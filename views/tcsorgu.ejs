@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('includes/head') %>
+</head>
+
+<body>
+    <!-- Begin page -->
+    <div class="wrapper">
+        
+        <%- include('includes/sidebar') %>
+        <%- include('includes/topbar') %>
+
+        <div class="page-content">
+            <div class="page-container">
+                
+                <div class="page-title-head d-flex align-items-center gap-2">
+                    <div class="flex-grow-1">
+                        <h4 class="fs-17 mb-0">TC Sorgu</h4>
+                    </div>
+                    <div class="text-end">
+                        <ol class="breadcrumb m-0 py-0 fs-13">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);"><%= name %></a></li>
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Sorgular</a></li>
+                            <li class="breadcrumb-item active">TC Sorgu</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Alert Box -->
+                <div id="tcAlert" class="alert alert-danger d-none" role="alert"></div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header border-bottom border-dashed d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h4 class="card-title mb-1">TC Kimlik Sorgulama</h4>
+                                    <small class="text-muted">TC kimlik numarası ile detaylı kişi bilgilerini sorgulayabilirsiniz.</small>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-primary-subtle text-primary">
+                                        <i class="ti ti-id me-1"></i>TC Sorgu
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <form id="searchForm">
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <label for="tc" class="form-label">TC Kimlik Numarası <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="ti ti-id"></i></span>
+                                                <input type="text" id="tc" name="tc" class="form-control" placeholder="Örn: 11111111110" maxlength="11" required>
+                                            </div>
+                                            <div class="form-text">11 haneli TC kimlik numarasını girin</div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-12 text-center">
+                                            <button type="submit" class="btn btn-primary px-4 py-2">
+                                                <i class="ti ti-search me-2"></i>Sorgula
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="row mt-4" id="resultsSection" style="display: none;">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header border-bottom border-dashed d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h4 class="card-title mb-1">Sorgu Sonuçları</h4>
+                                    <small class="text-muted" id="resultCount">Sonuçlar yükleniyor...</small>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <button class="btn btn-outline-success btn-sm" id="exportBtn" style="display: none;">
+                                        <i class="ti ti-download me-1"></i>Dışa Aktar
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" id="backToFormBtn">
+                                        <i class="ti ti-arrow-left me-1"></i>Geri
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="resultsBody">
+                                    <!-- Sonuçlar buraya gelecek -->
+                                </div>
+                                <div class="text-center py-5" id="noResults" style="display: none;">
+                                    <div class="bg-light rounded-4 p-5">
+                                        <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                                            <i class="ti ti-search-off fs-1 text-warning"></i>
+                                        </div>
+                                        <h5 class="fw-bold text-dark mb-2">Sonuç Bulunamadı</h5>
+                                        <p class="text-muted mb-0">Bu TC kimlik numarası için veri bulunamadı.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <%- include('includes/footer') %>
+    </div>
+
+    <!-- Vendor js -->
+    <script src="/assets/js/vendor.min.js"></script>
+    <script src="/assets/js/app.js"></script>
+
+    <script>
+        // Global variables
+        window.csrfToken = '<%= csrf %>';
+        window.userEmail = '<%= user?.email %>';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.getElementById('searchForm');
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsBody = document.getElementById('resultsBody');
+            const noResults = document.getElementById('noResults');
+            const resultCount = document.getElementById('resultCount');
+            const backToFormBtn = document.getElementById('backToFormBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            const alertBox = document.getElementById('tcAlert');
+
+            // Form submission
+            searchForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const tc = document.getElementById('tc').value.trim();
+                
+                if (!tc || tc.length !== 11) {
+                    showAlert('Lütfen geçerli bir TC kimlik numarası girin.', 'danger');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/tcpro', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-Token': window.csrfToken
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify({ tc })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.ok) {
+                        if (data.data && data.data.length > 0) {
+                            renderResults(data.data);
+                            resultsSection.style.display = 'block';
+                            searchForm.style.display = 'none';
+                        } else {
+                            showNoResults();
+                        }
+                    } else {
+                        showAlert(data.message || 'Sorgu başarısız.', 'danger');
+                    }
+                } catch (error) {
+                    showAlert('Bir hata oluştu. Lütfen tekrar deneyin.', 'danger');
+                }
+            });
+
+            // Back to form
+            backToFormBtn.addEventListener('click', function() {
+                resultsSection.style.display = 'none';
+                searchForm.style.display = 'block';
+                document.getElementById('tc').value = '';
+            });
+
+            function renderResults(data) {
+                resultCount.textContent = `${data.length} sonuç bulundu`;
+                resultsBody.innerHTML = data.map(person => `
+                    <div class="result-item mb-3 p-3 rounded-3 border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px);">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="result-icon me-3">
+                                <i class="ti ti-user text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1 text-white">${person.AD || ''} ${person.SOYAD || ''}</h6>
+                                <small class="text-muted">TC: ${person.TC || '-'}</small>
+                            </div>
+                        </div>
+                        <div class="row g-1">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center py-2 px-3 rounded-2" style="background: rgba(255,255,255,0.05); border-left: 3px solid #667eea;">
+                                    <span class="text-muted fw-semibold d-flex align-items-center">
+                                        <i class="ti ti-id me-2 text-primary"></i>TC Kimlik:
+                                    </span>
+                                    <span class="badge bg-primary-subtle text-primary fw-bold shadow-sm" style="font-size: 0.85rem; padding: 0.4rem 0.8rem; border-radius: 15px;">
+                                        <i class="ti ti-id me-1"></i>${person.TC || '-'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center py-2 px-3 rounded-2" style="background: rgba(255,255,255,0.03);">
+                                    <span class="text-muted fw-semibold d-flex align-items-center">
+                                        <i class="ti ti-user me-2 text-info"></i>Ad:
+                                    </span>
+                                    <span class="text-white fw-bold" style="font-size: 0.9rem;">${person.AD || '-'}</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center py-2 px-3 rounded-2" style="background: rgba(255,255,255,0.03);">
+                                    <span class="text-muted fw-semibold d-flex align-items-center">
+                                        <i class="ti ti-user me-2 text-info"></i>Soyad:
+                                    </span>
+                                    <span class="text-white fw-bold" style="font-size: 0.9rem;">${person.SOYAD || '-'}</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center py-2 px-3 rounded-2" style="background: rgba(255,255,255,0.05); border-left: 3px solid #28a745;">
+                                    <span class="text-muted fw-semibold d-flex align-items-center">
+                                        <i class="ti ti-phone me-2 text-success"></i>GSM:
+                                    </span>
+                                    <span class="badge bg-success-subtle text-success fw-bold shadow-sm" style="font-size: 0.85rem; padding: 0.4rem 0.8rem; border-radius: 15px;">
+                                        <i class="ti ti-phone me-1"></i>${person.GSM || 'YOK'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center py-2 px-3 rounded-2" style="background: rgba(255,255,255,0.03);">
+                                    <span class="text-muted fw-semibold d-flex align-items-center">
+                                        <i class="ti ti-user-check me-2 text-warning"></i>Baba Adı:
+                                    </span>
+                                    <span class="text-white fw-bold" style="font-size: 0.9rem;">${person.BABAADI || '-'}</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center py-2 px-3 rounded-2" style="background: rgba(255,255,255,0.03);">
+                                    <span class="text-muted fw-semibold d-flex align-items-center">
+                                        <i class="ti ti-user-heart me-2 text-danger"></i>Anne Adı:
+                                    </span>
+                                    <span class="text-white fw-bold" style="font-size: 0.9rem;">${person.ANNEADI || '-'}</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center py-2 px-3 rounded-2" style="background: rgba(255,255,255,0.05); border-left: 3px solid #ffc107;">
+                                    <span class="text-muted fw-semibold d-flex align-items-center">
+                                        <i class="ti ti-calendar me-2 text-warning"></i>Doğum Tarihi:
+                                    </span>
+                                    <span class="badge bg-warning-subtle text-warning fw-bold shadow-sm" style="font-size: 0.85rem; padding: 0.4rem 0.8rem; border-radius: 15px;">
+                                        <i class="ti ti-calendar me-1"></i>${person.DOGUMTARIHI || '-'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function showNoResults() {
+                noResults.style.display = 'block';
+                resultsSection.style.display = 'block';
+                searchForm.style.display = 'none';
+            }
+
+            function showAlert(message, type) {
+                alertBox.textContent = message;
+                alertBox.className = `alert alert-${type}`;
+                alertBox.classList.remove('d-none');
+                setTimeout(() => {
+                    alertBox.classList.add('d-none');
+                }, 5000);
+            }
+        });
+    </script>
+
+</body>
+
+    <script src="/assets/js/vendor.min.js"></script>
+    <script src="/assets/js/app.js"></script>
+
+</html>
